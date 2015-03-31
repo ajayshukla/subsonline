@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Magefast_FileTypesWYSIWYG>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Magefast_FileTypesWYSIWYG>
+    </modules>
+</config>

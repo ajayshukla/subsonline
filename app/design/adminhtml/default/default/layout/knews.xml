@@ -1,0 +1,1 @@
+<?xml version="1.0"?><layout version="0.1.0"><knewsadmin_adminhtml_news_index><reference name="content"><block type="knews/adminhtml_news" name="knews.admin.news" /></reference></knewsadmin_adminhtml_news_index></layout>

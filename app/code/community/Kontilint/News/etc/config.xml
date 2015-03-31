@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Kontilint_News extension
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category   Kontilint
+ * @package    Kontilint_News
+ * @copyright  Copyright (c) 2009 Kontilint Agency SA
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+/**
+ * @category   Kontilint
+ * @package    Kontilint_News
+ * @author     Mattias Bomelin <mattias@kontilint.se>
+ */
+-->
+<config><modules><Kontilint_News><version>0.1.2</version></Kontilint_News></modules><frontend><routers><knews><use>standard</use><args><module>Kontilint_News</module><frontName>news</frontName></args></knews></routers><translate><modules><Kontilint_News><files><default>Kontilint_News.csv</default></files></Kontilint_News></modules></translate><layout><updates><knews module="Kontilint_News"><file>knews.xml</file></knews></updates></layout></frontend><admin><routers><knewsadmin><use>admin</use><args><module>Kontilint_News</module><frontName>knewsadmin</frontName></args></knewsadmin></routers></admin><adminhtml><menu><cms><children><knews translate="title" module="knews"><title>Manage News</title><action>knewsadmin/adminhtml_news</action></knews></children></cms></menu><acl><resources><admin><children><cms><children><knews translate="title"><title>Manage News</title></knews></children></cms><system><children><config><children><knews><title>News Section</title></knews></children></config></children></system></children></admin></resources></acl><layout><updates><knews module="knews"><file>knews.xml</file></knews></updates></layout><translate><modules><Kontilint_News><files><default>Kontilint_News.csv</default></files></Kontilint_News></modules></translate></adminhtml>     <global><models><knews><class>Kontilint_News_Model</class><resourceModel>knews_mysql4</resourceModel></knews><knews_mysql4><class>Kontilint_News_Model_Mysql4</class><entities><news><table>kontilint_news</table></news><news_store><table>kontilint_news_store</table></news_store><news_cat><table>kontilint_news_cat</table></news_cat></entities></knews_mysql4></models><resources><knews_setup><setup><module>Kontilint_News</module></setup><connection><use>core_setup</use></connection></knews_setup><knews_write><connection><use>core_write</use></connection></knews_write><knews_read><connection><use>core_read</use></connection></knews_read></resources><blocks><knews><class>Kontilint_News_Block</class></knews></blocks><helpers><knews><class>Kontilint_News_Helper</class></knews></helpers><events><controller_front_init_routers><observers><knews><type>singleton</type><class>Kontilint_News_Controller_Router</class><method>initControllerRouters</method></knews></observers></controller_front_init_routers></events></global></config>
+

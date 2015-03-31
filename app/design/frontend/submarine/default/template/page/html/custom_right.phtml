@@ -1,0 +1,10 @@
+<?php 
+$cart = Mage::getModel('checkout/cart');
+if ($cart->getItemsCount() > 0 
+	&& Mage::app()->getFrontController()->getRequest()->getRouteName() != 'checkout') {
+	echo '<div class="cart">' . $this->getChildHtml('cart_sidebar') . '</div>';
+} else {
+	echo '<div class="banner">' . $this->getChildHtml('cms_right_callout') . "</div>";
+}
+echo '<div class="kontrolrapport">' . $this->getChildHtml('cms_right_kontrolrapport') . "</div>";
+?>

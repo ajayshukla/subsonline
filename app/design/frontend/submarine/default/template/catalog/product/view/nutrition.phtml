@@ -1,0 +1,48 @@
+<?php
+    $_helper = $this->helper('catalog/output');
+    $_product = $this->getProduct()
+?>
+<?php if($_additional = $this->getAdditionalData()): ?>
+    <div class="indeholder">
+    <div class="in_title">En <?php echo $_product->getName() ?> indeholder</div>
+        <div class="row gray">
+            <div class="col1">&nbsp;</div>
+            <div class="col2" title="<?php echo $this->__('Value per 100 g'); ?>"><?php echo $this->__('Value per 100 g'); ?></div>
+            <div class="col3" title="<?php echo $this->__('Value per item'); ?>"><?php echo $this->__('Value per item'); ?></div>
+            <div class="col4" title="<?php echo $this->__('Energy per item'); ?>"><?php echo $this->__('Energy per item'); ?></div>
+            <div class="col5" title="<?php echo $this->__('% of RDA'); ?>"><?php echo $this->__('% of RDA'); ?></div>
+        </div>
+
+        <?php
+        $rowindex = 0;
+        $nutritionArray = null;
+        $nutritionItemArray = null;
+        $nutritionEnergyArray = null;
+        $nutritionRdaArray = null;
+        foreach ($_additional as $key => $_data){
+            if (stripos($_data['code'], 'nutrition_') !== false) {
+                $nutritionArray[str_replace('nutrition_', '', $key)] = $_data;
+            }elseif(stripos($_data['code'], 'nutritionitem_') !== false) {
+                $nutritionItemArray[str_replace('nutritionitem_', '', $key)] = $_data;
+            }elseif(stripos($_data['code'], 'nutritionenergy_') !== false) {
+                $nutritionEnergyArray[str_replace('nutritionenergy_', '', $key)] = $_data;
+            }elseif(stripos($_data['code'], 'nutritionrda_') !== false) {
+                $nutritionRdaArray[str_replace('nutritionrda_', '', $key)] = $_data;
+            }
+        }
+        ?>
+
+        <?php if (count($nutritionArray)) :?>
+        <?php foreach ($nutritionArray as $key2=>$val) :?>
+        <div class="row <?php echo ($rowindex++ & 1 ? 'gray' : 'white'); ?>">
+            <div class="col1"><?php echo $this->htmlEscape($this->__($val['label'])) ?></div>
+            <div class="col2"><?php echo $val['value'] ? $_helper->productAttribute($_product, $val['value'], $val['code']) : '&nbsp;'; ?></div>
+            <div class="col3"><?php echo $nutritionItemArray[$key2]['value'] ? $_helper->productAttribute($_product, $nutritionItemArray[$key2]['value'], $nutritionItemArray[$key2]['code']) : '&nbsp;'; ?></div>
+            <div class="col4"><?php echo $nutritionEnergyArray[$key2]['value'] ? $_helper->productAttribute($_product, $nutritionEnergyArray[$key2]['value'], $nutritionEnergyArray[$key2]['code']) : '&nbsp;';  ?></div>
+            <div class="col5"><?php echo $nutritionRdaArray[$key2]['value'] ? $_helper->productAttribute($_product, $nutritionRdaArray[$key2]['value'], $nutritionRdaArray[$key2]['code']) : '&nbsp;';  ?></div>
+        </div>
+        <?php endforeach;?>
+        <?php endif;?>
+
+    </div>
+<?php endif;?>

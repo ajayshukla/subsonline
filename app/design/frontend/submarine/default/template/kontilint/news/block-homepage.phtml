@@ -1,0 +1,33 @@
+<?php $collection = $this->getItems(3); ?>
+<div class="news">
+    <div class="nyheder"><?php echo $this->__('News'); ?></div>
+    <?php if ( count($collection) == 0 ) : ?>
+
+    <p><?php echo $this->__('No news yet...'); ?></p>
+
+    <?php else : ?>
+    <ul class="subcat-news">
+        <?php
+        $newsCount = 0;
+        foreach ( $collection as $_item ) {
+            $newsCount++;
+            if ($newsCount == 1) {
+                $liClass = ' class="first"';
+            } elseif($newsCount == 3) {
+                $liClass = ' class="last"';
+            } else {
+                $liClass = '';
+            }
+            ?>
+
+            <li<?php echo $liClass; ?>><h1><?php echo $_item['title']; ?></h1>
+                <p style="padding-left:0px;"><?php echo $_item['short_description']; ?></p>
+                <a class="readmore" href="<?php echo Mage::helper('knews')->getUrl($_item['identifier']); ?>"><?php echo $this->__('Learn more...'); ?></a>
+            </li>
+
+            <?php } ?>
+    </ul>
+
+    <?php endif; ?>
+
+</div>

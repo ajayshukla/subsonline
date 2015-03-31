@@ -1,0 +1,163 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2011 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+?>
+
+<?php /* @var $this Mage_Bundle_Block_Catalog_Product_View_Type_Bundle_Option_Filling */ ?>
+<?php $_option = $this->getOption() ?>
+<?php $_selections = $_option->getSelections() ?>
+
+<div class="box filling">
+    <label<?php if ($_option->getRequired()) echo ' class="required"' ?>><?php echo $this->htmlEscape($_option->getTitle()) ?><?php if ($_option->getRequired()) echo '<em>*</em>' ?></label>
+    <div class="bundle_title"><div class="expand" id="bundle_title_<?php echo $_option->getId() ?>"><?php echo $this->__('Choose') ?></div></div>
+    <ul class="bundles filling" style="display: none" id="ul_bundles-<?php echo $_option->getId() ?>">
+        <li id="li-filling-option-<?php echo $_option->getId() ?>-0" onclick="everythingFilling(<?php echo $_option->getId() ?>, 0)"><span style="padding-left: 8px;"><?php echo $this->__('Everything'); ?></span></li>
+        <li id="li-filling-option-<?php echo $_option->getId() ?>-1" onclick="customFilling(<?php echo $_option->getId() ?>, 1)"><span style="padding-left: 8px;"><?php echo $this->__('Custom'); ?></span></li>
+        <?php if ($this->helper('favourites')->getFavourites()->getItemsCount() > 0): ?>
+            <?php foreach ($this->helper('favourites')->getFavourites()->getItemCollection() as $item): ?>
+					<?php
+						$helper =  Mage::helper('favourites/configuration');
+						$optionIds = $helper->getBundleOptionsIds($item);
+					?>
+					<?php if ($optionIds[0]['attribute_set'] == "Fillings Xtra 1 foot"): ?>
+						<?php if ($this->getProduct()->getSku() == "subs"): ?>
+							<li id="li-filling-option-<?php echo $_option->getId() ?>-<?php echo $item->getId() ?>" onclick="favoriteFilling('<?php echo $_option->getId() ?>', '<?php echo $item->getId() ?>')"><span style="padding-left: 8px; float: left;" class="fill_name"><?php echo $item->getDescription() ?></span></li>
+						<?php endif; ?>
+					<?php else: ?>
+						<li id="li-filling-option-<?php echo $_option->getId() ?>-<?php echo $item->getId() ?>" onclick="favoriteFilling('<?php echo $_option->getId() ?>', '<?php echo $item->getId() ?>')"><span style="padding-left: 8px; float: left;" class="fill_name"><?php echo $item->getDescription() ?></span></li>
+					<?php endif; ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </ul>
+    <span class="fill_custom">
+        <div id="lnk_custom_filling" style="padding-left: 25px; padding-top: 1px; position: absolute; z-index: 1; display: none">
+<script type="text/javascript">
+    Translator.add('Show Custom fillings', '<?php echo $this->__('Show Custom fillings'); ?>');
+    Translator.add('Hide custom fillings', '<?php echo $this->__('Hide custom fillings'); ?>');
+</script>
+            <a href="#" style="color: #fff; font-size: 11px; text-decoration: none;" onclick="showCheckedFillings(<?php echo $_option->getId() ?>); return false;">
+                <span><?php echo Mage::helper('productview')->__('Hide custom fillings'); ?></span>
+                <img style="display: block; margin-left: 45px; margin-top: 3px;" src="<?php echo $this->getSkinUrl("/images/white_arrow_down.png")?>" />
+            </a>
+        </div>
+    </span>
+</div>
+
+<script>
+    jQuery(document).ready(function() {
+        if (editMode) {
+            editOrderFavoriteFilling(<?php echo $_option->getId() ?>);
+        }
+    });
+</script>
+
+<div id="div_bundle_filling_<?php echo $_option->getId() ?>" class="filling_green" style="display: none; clear: both">
+<div class="bg_fill">
+		<?php if (count($_selections) == 1 && $_option->getRequired()) { ?>
+			<?php echo $this->getSelectionQtyTitlePrice($_selections[0]) ?>
+			<input type="hidden" name="bundle_option[<?php echo $_option->getId() ?>]" value="<?php echo $_selections[0]->getSelectionId() ?>"/>
+		<?php } else { ?>
+			<?php
+			$aBundleProducts = array();
+			foreach($_selections as $key=>$_selection) {
+				$attributeSetModel = Mage::getModel("eav/entity_attribute_set");
+				$attributeSetModel->load($_selection->getAttributeSetId());
+				$aBundleProducts[$attributeSetModel->getAttributeSetName()][$_selection->getId()] = $_selection;
+			}
+		?>
+		<?php if (isset($aBundleProducts['Fillings not xtra'])): ?>
+		<?php foreach($aBundleProducts['Fillings not xtra'] as $key=>$aBundleProduct): ?>
+			<?php $oLinkedProductCollection = $aBundleProduct->getRelatedLinkCollection(); ?>
+				<div id="bundle_product_<?php echo $key ?>" class="bundle-products">
+					<div id="selection_<?php echo $aBundleProduct->getSelectionId() ?>" class="bundle-product-main" onclick="addBundleProduct(<?php echo $_option->getId(); ?>, <?php echo $aBundleProduct->getSelectionId() ?>, '<?php echo $key ?>')">
+						<span class="filling_fav"><?php echo $aBundleProduct->getName(); ?></span>
+						<img id="image-<?php echo $_option->getId(); ?>-<?php echo $key; ?>" src="<?php echo $this->helper('catalog/image')->init($aBundleProduct, 'thumbnail')->resize(80,60); ?>" width="80" height="60" />
+					</div>
+					<div class="bundle_product_filling">
+						<div onclick="removeBundleProduct(<?php echo $_option->getId(); ?>, '<?php echo $key; ?>')" class="bundle_product_none bundle-product-none-<?php echo $key ?>"><?php echo Mage::helper('productview')->__('None'); ?></div>
+						<?php foreach ($oLinkedProductCollection as $oCurrentLinkedProduct): ?>
+							<?php if (isset($aBundleProducts['Fillings Xtra'][$oCurrentLinkedProduct->getLinkedProductId()])): ?>
+								<?php
+									$aCategoryIds = $aBundleProducts['Fillings Xtra'][$oCurrentLinkedProduct->getLinkedProductId()]->getCategoryIds();
+									$category_id = end($aCategoryIds);
+								?>
+								<div id="selection_<?php echo $aBundleProducts['Fillings Xtra'][$oCurrentLinkedProduct->getLinkedProductId()]->getSelectionId() ?>" onclick="addBundleProductXtra(<?php echo $_option->getId(); ?>, <?php echo $aBundleProducts['Fillings Xtra'][$oCurrentLinkedProduct->getLinkedProductId()]->getSelectionId() ?>, '<?php echo $key; ?>')" class="sub_category_<?php echo $category_id; ?> bundle_product_xtra bundle-product-xtra-<?php echo $key ?>"><?php echo $this->__('X-Tra') ?></div>
+							<?php endif; ?>
+							<?php if (isset($aBundleProducts['Fillings Xtra 1 foot'][$oCurrentLinkedProduct->getLinkedProductId()])): ?>
+								<?php
+									$aCategoryIds = $aBundleProducts['Fillings Xtra 1 foot'][$oCurrentLinkedProduct->getLinkedProductId()]->getCategoryIds();
+									$category_id = end($aCategoryIds);
+								?>
+								<div id="selection_<?php echo $aBundleProducts['Fillings Xtra 1 foot'][$oCurrentLinkedProduct->getLinkedProductId()]->getSelectionId() ?>" style="display: none;" onclick="addBundleProductXtra(<?php echo $_option->getId(); ?>, <?php echo $aBundleProducts['Fillings Xtra 1 foot'][$oCurrentLinkedProduct->getLinkedProductId()]->getSelectionId() ?>, '<?php echo $key; ?>')" class="sub_category_<?php echo $category_id; ?> bundle_product_xtra bundle-product-xtra-<?php echo $key ?>"><?php echo $this->__('X-Tra') ?></div>
+							<?php endif; ?>
+						<?php endforeach; ?>
+					</div>
+				</div>
+				<div relationid="<?php echo $key; ?>" id="div_bundle_option_<?php echo $aBundleProduct->getSelectionId() ?>" style="display: none" class="<?php echo $key; ?> product-yes" productid="<?php echo $aBundleProduct->getId() ?>">
+					<input class="change-container-classname checkbox bundle-option-<?php echo $_option->getId() ?> <?php if ($_option->getRequired()) echo 'validate-one-required-by-name' ?> product_<?php echo $aBundleProduct->getId() ?>" id="bundle-option-<?php echo $_option->getId() ?>-<?php echo $aBundleProduct->getSelectionId() ?>" type="checkbox" name="bundle_option[<?php echo $_option->getId() ?>][]"<?php if ($this->_isSelected($aBundleProduct)) echo ' checked="checked"' ?><?php if (!$aBundleProduct->isSaleable()) echo ' disabled="disabled"' ?> value="<?php echo $aBundleProduct->getSelectionId() ?>"/>
+					<?php if($_option->getRequired()): ?>
+						<?php echo $this->setValidationContainer('bundle-option-'.$_option->getId().'-'.$aBundleProduct->getSelectionId(), 'bundle-option-'.$_option->getId().'-container') ?>
+					<?php endif; ?>
+				</div>
+				<?php foreach ($oLinkedProductCollection as $oCurrentLinkedProduct): ?>
+					<?php if (isset($aBundleProducts['Fillings Xtra'][$oCurrentLinkedProduct->getLinkedProductId()])): ?>
+						<?php
+							$aCategoryIds = $aBundleProducts['Fillings Xtra'][$oCurrentLinkedProduct->getLinkedProductId()]->getCategoryIds();
+							$category_id = end($aCategoryIds);
+						?>
+						<div relationid="<?php echo $key; ?>" id="div_bundle_option_<?php echo $aBundleProducts['Fillings Xtra'][$oCurrentLinkedProduct->getLinkedProductId()]->getSelectionId() ?>" style="display: none" class="<?php echo $key; ?> product-xtra sub_category_<?php echo $category_id; ?>" productid="<?php echo $aBundleProducts['Fillings Xtra'][$oCurrentLinkedProduct->getLinkedProductId()]->getProductId() ?>">
+							<input productid="<?php echo $aBundleProducts['Fillings Xtra'][$oCurrentLinkedProduct->getLinkedProductId()]->getProductId() ?>" class="change-container-classname checkbox bundle-option-<?php echo $_option->getId() ?> <?php if ($_option->getRequired()) echo 'validate-one-required-by-name' ?> product_<?php echo $aBundleProducts['Fillings Xtra'][$oCurrentLinkedProduct->getLinkedProductId()]->getProductId() ?>" id="bundle-option-<?php echo $_option->getId() ?>-<?php echo $aBundleProducts['Fillings Xtra'][$oCurrentLinkedProduct->getLinkedProductId()]->getSelectionId() ?>" type="checkbox" name="bundle_option[<?php echo $_option->getId() ?>][]"<?php if ($this->_isSelected($aBundleProducts['Fillings Xtra'][$oCurrentLinkedProduct->getLinkedProductId()])) echo ' checked="checked"' ?><?php if (!$aBundleProducts['Fillings Xtra'][$oCurrentLinkedProduct->getLinkedProductId()]->isSaleable()) echo ' disabled="disabled"' ?> value="<?php echo $aBundleProducts['Fillings Xtra'][$oCurrentLinkedProduct->getLinkedProductId()]->getSelectionId() ?>"/>
+							<?php if($_option->getRequired()): ?>
+								<?php echo $this->setValidationContainer('bundle-option-'.$_option->getId().'-'.$aBundleProducts['Fillings Xtra'][$oCurrentLinkedProduct->getLinkedProductId()]->getSelectionId(), 'bundle-option-'.$_option->getId().'-container') ?>
+							<?php endif; ?>
+						</div>
+					<?php endif; ?>
+					<?php if (isset($aBundleProducts['Fillings Xtra 1 foot'][$oCurrentLinkedProduct->getLinkedProductId()])): ?>
+					<?php
+						$aCategoryIds = $aBundleProducts['Fillings Xtra 1 foot'][$oCurrentLinkedProduct->getLinkedProductId()]->getCategoryIds();
+						$category_id = end($aCategoryIds);
+					?>
+					<div relationid="<?php echo $key; ?>" id="div_bundle_option_<?php echo $aBundleProducts['Fillings Xtra 1 foot'][$oCurrentLinkedProduct->getLinkedProductId()]->getSelectionId() ?>" style="display: none" class="<?php echo $key; ?> product-xtra sub_category_<?php echo $category_id; ?>" productid="<?php echo $aBundleProducts['Fillings Xtra 1 foot'][$oCurrentLinkedProduct->getLinkedProductId()]->getProductId() ?>">
+						<input productid="<?php echo $aBundleProducts['Fillings Xtra 1 foot'][$oCurrentLinkedProduct->getLinkedProductId()]->getProductId() ?>" class="change-container-classname checkbox bundle-option-<?php echo $_option->getId() ?> <?php if ($_option->getRequired()) echo 'validate-one-required-by-name' ?> product_<?php echo $aBundleProducts['Fillings Xtra 1 foot'][$oCurrentLinkedProduct->getLinkedProductId()]->getProductId() ?>" id="bundle-option-<?php echo $_option->getId() ?>-<?php echo $aBundleProducts['Fillings Xtra 1 foot'][$oCurrentLinkedProduct->getLinkedProductId()]->getSelectionId() ?>" type="checkbox" name="bundle_option[<?php echo $_option->getId() ?>][]"<?php if ($this->_isSelected($aBundleProducts['Fillings Xtra 1 foot'][$oCurrentLinkedProduct->getLinkedProductId()])) echo ' checked="checked"' ?><?php if (!$aBundleProducts['Fillings Xtra 1 foot'][$oCurrentLinkedProduct->getLinkedProductId()]->isSaleable()) echo ' disabled="disabled"' ?> value="<?php echo $aBundleProducts['Fillings Xtra 1 foot'][$oCurrentLinkedProduct->getLinkedProductId()]->getSelectionId() ?>"/>
+						<?php if($_option->getRequired()): ?>
+							<?php echo $this->setValidationContainer('bundle-option-'.$_option->getId().'-'.$aBundleProducts['Fillings Xtra 1 foot'][$oCurrentLinkedProduct->getLinkedProductId()]->getSelectionId(), 'bundle-option-'.$_option->getId().'-container') ?>
+						<?php endif; ?>
+					</div>
+					<?php endif; ?>
+				<?php endforeach; ?>
+			<?php endforeach; ?>
+		<?php endif; ?>
+        <div id="bundle-option-<?php echo $_option->getId() ?>-container"></div>
+    <?php } ?>
+        <?php if ($this->helper('favourites')->isAllow()) : ?>
+        <?php $_product = $this->getProduct(); ?>
+        <?php $_favouritesSubmitUrl = $this->helper('favourites')->getAddUrl($_product); ?>
+                <span class="fill_fav">
+                    <a id="addfilling" href="<?php echo $_favouritesSubmitUrl ?>" class="link-favourites"><?php echo Mage::helper('productview')->__('Add fillings to favorites') ?></a>
+                </span>
+        <?php endif; ?>
+ </div>
+ </div>

@@ -1,0 +1,231 @@
+<?php
+/**
+ * Copyright ePay | Dit Online Betalingssystem, (c) 2010.
+ * 
+ * This program is free software. You are allowed to use the software but NOT allowed to modify the software. 
+ * It is also not legal to do any changes to the software and distribute it in your own name / brand. 
+ */
+//
+// Load the epay standard object
+//
+$standard = Mage::getModel('epay/standard');
+
+//
+// Fetch order invoice info
+//
+$order = Mage::getModel('sales/order');
+$order->loadByIncrementId($standard->getCheckout()->getLastRealOrderId());
+$convertor = Mage::getModel('sales/convert_order');
+$invoice = $convertor->toInvoice($order); 
+
+//
+// If integrated is not set something is wrong - throw exception then
+//
+if ($standard->getConfigData('integrated', $order ? $order->getStoreId() : null) != '2') {
+	throw new exception("Invalid integrated type!?!?");
+}
+
+//
+// Fix for safari - somehow the window.open returns null - this is fixed by declaring the epaywin attribute before
+//
+function isSafari() {
+	if ($_SERVER['HTTP_USER_AGENT'] != null && strlen($_SERVER['HTTP_USER_AGENT']) > 0) {
+		if (strstr(strtolower($_SERVER['HTTP_USER_AGENT']), "safari") != null) {
+			return true;
+		}
+	}
+	return false;
+}
+
+//
+// Go on and load the payment form containing the values
+//
+?>
+
+<!--  Load in the javascript for the payment window -->
+<script type="text/javascript" src="http://www.epay.dk/js/standardwindow.js"></script> 
+
+<script type="text/javascript">
+function goBack()
+{
+	location.href = "<?php echo Mage::getUrl('checkout/cart'); ?>";
+}
+</script>
+
+<form action="https://ssl.ditonlinebetalingssystem.dk/popup/default.asp" method="post" name="ePay" target="ePay_window" id="ePay">
+	<h1><?php echo $this->__('EPAY_LABEL_5') ?></h1>
+	<?php echo $this->__('EPAY_LABEL_32') ?>
+	<br /><br />
+	<table border="0">
+<?php
+	if ($standard->showTrustedList()) {
+    ?>
+    <tr>
+    	<td colspan="2">
+    <?php
+    //
+    // Show trusted logos
+    //
+    $logoArray = explode(',', $standard->getConfigData('epaylogos', $order ? $order->getStoreId() : null));
+    foreach($logoArray as $item) {
+    	switch ($item) {
+    		case '1000': {
+    			?><img src="<?php echo $this->getSkinUrl('images/epay/epay_logo.gif') ?>" border="0" title="ePay | Dit online Betalingssystem.dk (www.epay.dk)" />&nbsp;&nbsp;<?php
+    			break;
+    		} 
+    		case '1001': {
+    			?><img src="<?php echo $this->getSkinUrl('images/epay/verisign_secure.gif') ?>" border="0" />&nbsp;&nbsp;<?php
+    			break;
+    		} 
+    		case '1002': {
+    			?><img src="<?php echo $this->getSkinUrl('images/epay/mastercard_securecode.gif') ?>" border="0" />&nbsp;&nbsp;<?php
+    			break;
+    		} 
+    		case '1003': {
+    			?><img src="<?php echo $this->getSkinUrl('images/epay/pci.gif') ?>" border="0" />&nbsp;&nbsp;<?php
+    			break;
+    		} 
+    		case '1004': {
+    			?><img src="<?php echo $this->getSkinUrl('images/epay/pbslogo.gif') ?>" border="0" />&nbsp;&nbsp;<?php
+    			break;
+    		} 
+    		case '1005': {
+					?><img src="<?php echo $this->getSkinUrl('images/epay/seb.jpg') ?>" border="0" />&nbsp;&nbsp;<?php
+					break;
+				}
+				case '1006': {
+					?><img src="<?php echo $this->getSkinUrl('images/epay/euroline.gif') ?>" border="0" />&nbsp;&nbsp;<?php
+					break;
+				} 
+    	}
+    }
+?>
+			<br><br>
+		</td>
+	</tr>
+<?php    
+  }
+?>		
+		<tr>
+			<td>
+				<label for="Orderid"><?php echo $this->__('EPAY_LABEL_7') ?> :</label>
+			</td>
+			<td>
+	  		<label for="Orderid"><?php echo $standard->getCheckout()->getLastRealOrderId() ?></label>
+	  	</td>
+	  </tr>
+	  <tr>
+			<td>
+				<label for="Amount"><?php echo $this->__('EPAY_LABEL_8') ?> :</label>
+			</td>
+			<td>
+	  		<label for="CurrencyAmount"><?php echo $order->getBaseCurrency()->getCode() ?>&nbsp;<?php echo number_format($order->getBaseTotalDue(), 2, ',', ' ') ?></label>
+	  	</td>
+	  </tr>
+	  <tr>
+	  	<td colspan="2">
+	  			<br>
+	  			<input type="button" value="<?php echo $this->__('EPAY_LABEL_35') ?>" onClick="open_ePay_window();"> <br><br>
+	  			<?php echo $this->__('EPAY_LABEL_33') ?> <br><br>
+					<?php echo $this->__('EPAY_LABEL_34') ?> <br><br>
+					<?php if ($standard->getConfigData('showcancelpaymentbutton', $order ? $order->getStoreId() : null) == "1") {				?>
+						<input name="paymentCancel" id="paymentCancel" value="<?php echo $this->__('EPAY_LABEL_100') ?>" type="button" class="form-button-alt" onclick="goBack();" />
+						<br><br>
+					<?php } ?>
+	  	</td>
+	  </tr>
+	</table>
+	
+	<input type="hidden" name="merchantnumber" value="<?php echo $standard->getConfigData("merchantnumber", $order ? $order->getStoreId() : null) ?>">
+	<input type="hidden" name="accepturl" value="<?php echo Mage::getUrl('epay/standard/success') ?>">
+	<input type="hidden" name="declineurl" value="<?php echo Mage::getUrl('checkout/cart') ?>">
+	<input type="hidden" name="callbackurl" value="<?php echo Mage::getUrl('epay/standard/callback') ?>">
+	<input type="hidden" name="orderid" value="<?php echo $standard->getCheckout()->getLastRealOrderId() ?>">
+	<input type="hidden" name="authmail" value="<?php echo $standard->getConfigData('authmail', $order ? $order->getStoreId() : null) ?>">
+	<input type="hidden" name="authsms" value="<?php echo $standard->getConfigData('authsms', $order ? $order->getStoreId() : null) ?>">
+	<input type="hidden" name="instantcapture" value="<?php echo $standard->getConfigData('instantcapture', $order ? $order->getStoreId() : null) ?>">
+	<input type="hidden" name="group" value="<?php echo $standard->getConfigData('group', $order ? $order->getStoreId() : null) ?>">
+	<input type="hidden" name="amount" value="<?php echo ((float)$order->getBaseTotalDue()) * 100 ?>">
+	<input type="hidden" name="MD5Key" value="<?php echo $standard->calcMd5Key($order) ?>">
+	<input type="hidden" name="currency" value="<?php echo $standard->convertToEpayCurrency($order->getBaseCurrency()->getCode()) ?>">
+	<input type="hidden" name="addfee" value="<?php echo $standard->getConfigData('addfee', $order ? $order->getStoreId() : null) ?>">
+	<input type="hidden" name="language" value="<?php echo $standard->calcLanguage(Mage::app()->getLocale()->getLocaleCode()) ?>">
+	<input type="hidden" name="windowstate" value="<?php echo (isSafari() ? "2" : $standard->getConfigData('windowstate', $order ? $order->getStoreId() : null)) ?>">
+	<input type="hidden" name="splitpayment" value="<?php echo $standard->getConfigData('splitpayment', $order ? $order->getStoreId() : null) ?>">
+	<input type="hidden" name="instantcallback" value="1">
+	<input type="hidden" name="cms" value="magento">
+	<?php if ($standard->getConfigData('ownreceipt', $order ? $order->getStoreId() : null) == "1") {				?>
+		<input type="hidden" name="ownreceipt" value="1">
+	<?php } ?>
+</form>
+
+<!--  Try to open the payment window automatic -->
+<script language="JavaScript">open_ePay_window();</script>
+
+<?php
+//
+// Udskriv liste af kort butikken kan tage i mod
+//
+if ($standard->showCardsList()) {
+	$logoArray = explode(',', $standard->getConfigData('epaylogos', $order ? $order->getStoreId() : null));
+	foreach($logoArray as $item) {
+  	switch ($item) {
+  		case '1': {
+  			?><img src="<?php echo $this->getSkinUrl('images/epay/dankort.gif') ?>" border="0" title="Dankort" />&nbsp;&nbsp;<?php
+  			break;
+  		} 
+  		case '2': {
+  			?><img src="<?php echo $this->getSkinUrl('images/epay/edankort.gif') ?>" border="0" title="eDankort" />&nbsp;&nbsp;<?php
+  			break;
+  		} 
+  		case '3': {
+  			?><img src="<?php echo $this->getSkinUrl('images/epay/danskenetbetaling.gif') ?>" border="0" title="Danske Bank Netbetaling" />&nbsp;&nbsp;<?php
+  			break;
+  		} 
+  		case '4': {
+  			?><img src="<?php echo $this->getSkinUrl('images/epay/nordea.gif') ?>" border="0" title="Nordea e-betaling" />&nbsp;&nbsp;<?php
+  			break;
+  		} 
+  		case '5': {
+  			?><img src="<?php echo $this->getSkinUrl('images/epay/ewire.gif') ?>" border="0" title="EWIRE" />&nbsp;&nbsp;<?php
+  			break;
+  		} 
+  		case '6': {
+  			?><img src="<?php echo $this->getSkinUrl('images/epay/forbrugsforeningen.gif') ?>" border="0" title="Forbrugsforeningen" />&nbsp;&nbsp;<?php
+  			break;
+  		} 
+  		case '7': {
+  			?><img src="<?php echo $this->getSkinUrl('images/epay/visa.gif') ?>" border="0" title="VISA" />&nbsp;&nbsp;<?php
+  			break;
+  		} 
+  		case '8': {
+  			?><img src="<?php echo $this->getSkinUrl('images/epay/visaelectron.gif') ?>" border="0" title="VISA Electron" />&nbsp;&nbsp;<?php
+  			break;
+  		} 
+  		case '9': {
+  			?><img src="<?php echo $this->getSkinUrl('images/epay/mastercard.gif') ?>" border="0" title="MasterCard" />&nbsp;&nbsp;<?php
+  			break;
+  		} 
+  		case '10': {
+  			?><img src="<?php echo $this->getSkinUrl('images/epay/maestro.gif') ?>" border="0" title="Maestro" />&nbsp;&nbsp;<?php
+  			break;
+  		} 
+  		case '11': {
+  			?><img src="<?php echo $this->getSkinUrl('images/epay/jcb.gif') ?>" border="0" title="JCB" />&nbsp;&nbsp;<?php
+  			break;
+  		} 
+  		case '12': {
+  			?><img src="<?php echo $this->getSkinUrl('images/epay/diners.gif') ?>" border="0" title="Diners Club" />&nbsp;&nbsp;<?php
+  			break;
+  		} 
+  		case '13': {
+  			?><img src="<?php echo $this->getSkinUrl('images/epay/amex.gif') ?>" border="0" title="AMEX" />&nbsp;&nbsp;<?php
+  			break;
+  		} 
+  	}
+  }
+?>
+	<br><br>
+<?php
+}
+?>

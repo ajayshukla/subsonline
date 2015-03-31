@@ -1,0 +1,120 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2011 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Shoping cart sidebar
+ *
+ * @see Mage_Checkout_Block_Cart_Sidebar
+ */
+?>
+<h1><span class="basket_icon"><?php echo $this->__('Basket') ?></span><a href="<?php echo $this->getUrl('checkout/cart') ?>" style="float:right;"><?php echo $this->__('View basket') ?></a></h1>
+<div class="right-box">
+<?php if ($this->getIsNeedToDisplaySideBar()):?>
+    <?php $_cartQty = $this->getSummaryCount() ?>
+	<div class="block block-cart">
+    <?php $_items = $this->getRecentItems() ?>
+    <?php if(count($_items)): 
+		try {
+			$cartCategories = array();
+			foreach($_items as $_item) {
+				$categoryIds = $_item->getProduct()->getCategoryIds();
+				if (!is_array($categoryIds)) $categoryIds = array();
+				if ($_item->getProduct()->getTypeId() == 'simple') {
+					$productSimpleSKU = explode("-", $_item->getProduct()->getSku());
+					if ($productSimpleSKU[0] == "drinks") {
+						$categoryId = Mage::getModel("catalog/category")->load(end($categoryIds))->getParentId();
+						$cartCategories[$categoryId]['items'][] = $_item->getId();
+						$cartCategories[$categoryId]['qty'][] = $_item->getQty();
+					} else {
+						$categoryId = end($categoryIds);
+						$cartCategories[$categoryId]['items'][] = $_item->getId();
+						$cartCategories[$categoryId]['qty'][] = $_item->getQty();
+					}
+				} else {
+					$categoryId = end($categoryIds);
+					$cartCategories[$categoryId]['items'][] = $_item->getId();
+					$cartCategories[$categoryId]['qty'][] = $_item->getQty();
+				}
+
+			}
+		} catch (Exception $e) {
+			Mage::log($e->getMessage(), null, 'exception.log');
+		}
+		$isfirst = 0;
+		foreach ($cartCategories as $catId => $categoryItems) {
+			$category = Mage::getModel("catalog/category")->load($catId);
+	?>
+			<div class="left cat_subs"><?php echo $this->__($category->getName()) ?> 
+			<?php if(!$isfirst++): ?><span class="right pris"><?php echo $this->__('Pris i kr.') ?></span><?php endif; ?>
+			</div>
+			<ol id="cart-sidebar" class="mini-products-list">
+			<?php
+				foreach ($categoryItems['items'] as $key => $itemId) {
+					foreach($this->getItems() as $_item) {
+						if ($_item->getId() == $itemId) { 
+							echo $this->getItemHtml($_item);
+						}
+					}
+				}
+			?>
+			</ol>
+		<?php
+		}
+		?>
+			<script type="text/javascript">decorateList('cart-sidebar', 'none-recursive')</script>
+    <?php else: ?>
+        <p class="empty"><?php echo $this->__('You have no items in your shopping cart.') ?></p>
+    <?php endif ?>
+    </div>
+	
+    <div class="block-content">
+    <?php if ($_cartQty>0): ?>
+        <div class="summary">
+            <p class="subtotal">
+                <?php if ($this->canApplyMsrp()): ?>
+                    <span class="map-cart-sidebar-total"><?php echo $this->__('ORDER TOTAL WILL BE DISPLAYED BEFORE YOU SUBMIT THE ORDER'); ?></span>
+                <?php else: ?>
+                    <span class="label"><?php echo $this->__('I alt DKK') ?></span> <?php echo Mage::helper('checkout')->formatPrice($this->getSubtotal()) ?>
+                    <?php if ($_subtotalInclTax = $this->getSubtotalInclTax()): ?>
+                        <br />(<?php echo Mage::helper('checkout')->formatPrice($_subtotalInclTax) ?> <?php echo Mage::helper('tax')->getIncExcText(true) ?>)
+                    <?php endif; ?>
+                <?php endif; ?>
+            </p>
+        </div>
+    <?php endif ?>
+
+    <?php if($_cartQty && $this->isPossibleOnepageCheckout()): ?>
+    <div class="actions">
+        <?php echo $this->getChildHtml('extra_actions') ?>
+        <button type="button" class="checkout_btn" title="<?php echo $this->__('Checkout') ?>" class="button" onclick="setLocation('<?php echo $this->getCheckoutUrl() ?>')"><span><span><?php echo $this->__('Checkout') ?></span></span></button>
+    </div>
+    <?php endif ?>
+        <div class="actions" style="padding-bottom: 10px;">
+            <?php echo $this->getChildHtml('pay_icons') ?>
+        </div>
+</div>
+<?php endif;?>
+</div>

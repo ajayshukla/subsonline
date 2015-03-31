@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Submarine_Favproducts>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Submarine_Favproducts>
+    </modules>
+</config> 

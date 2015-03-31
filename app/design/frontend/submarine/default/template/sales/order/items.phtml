@@ -1,0 +1,61 @@
+<?php
+$_order = $this->getOrder();
+$_items = $_order->getItemsCollection();
+
+// product categories in the basket
+try {
+    $cartCategories = array();
+    foreach($_items as $_item) {
+		if (!$_item->getParentItem()) {
+			$itemProductId = $_item->getProductId();
+			$product = Mage::getModel('catalog/product')->load($itemProductId);
+
+			$categoryIds = $product->getCategoryIds();
+			if (!is_array($categoryIds)) $categoryIds = array();
+			if ($product->getTypeId() == 'simple') {
+				$productSimpleSKU = explode("-", $product->getSku());
+				if ($productSimpleSKU[0] == "drinks") {
+					$categoryId = Mage::getModel("catalog/category")->load(end($categoryIds))->getParentId();
+					$cartCategories[$categoryId]['items'][] = $_item->getId();
+					$cartCategories[$categoryId]['qty'][] = $_item->getQtyOrdered();
+				} else {
+					$categoryId = end($categoryIds);
+					$cartCategories[$categoryId]['items'][] = $_item->getId();
+					$cartCategories[$categoryId]['qty'][] = $_item->getQtyOrdered();
+				}
+			} else {
+				$categoryId = end($categoryIds);
+				$cartCategories[$categoryId]['items'][] = $_item->getId();
+				$cartCategories[$categoryId]['qty'][] = $_item->getQtyOrdered();
+			}
+		}
+    }
+} catch (Exception $e) {
+    Mage::log($e->getMessage(), null, 'exception.log');
+}
+
+// serial number of a product in the basket shown on the basket page
+global $prodNo;
+$prodNo = 1;
+
+foreach ($cartCategories as $catId => $categoryItems) {
+    $category =  Mage::getModel("catalog/category")->load($catId);
+    // category total quantity
+    $catTotal = 0;
+    foreach ($categoryItems['qty'] as $key => $qty) {
+        $catTotal += intval($qty);
+    }
+    ?>
+<div class="position_title"><?php echo $category->getName(); ?> <span class="total"><?php echo $this->__("TOTAL ") . $catTotal ?></span></div>
+<?php
+    foreach ($categoryItems['items'] as $key => $itemId) {
+        $_items = $_order->getItemsCollection();
+        foreach($_items as $_item) {
+            if ($_item->getId() == $itemId) {
+                echo $this->getItemHtml($_item);
+                $prodNo++;
+            }
+        }
+    }
+}
+?>

@@ -1,0 +1,42 @@
+<?php
+  //$_menu = $this->renderCmsMenuHtml(0, true, $_cmsIsFirst, 'level-top');
+  $_menu = $this->renderCmsMenuHtml(0);
+?>
+<?php if ($_menu) { ?>
+<div id="header_menu">
+    <ul id="nav">
+		<?php echo $_menu ?>
+    </ul>
+</div>
+<?php } ?>
+
+<script>
+//var cmsMenuActiveTimeId = {};
+jQuery("#nav > li").each(function(){
+	jQuery(this).children("a").click(function(){return false});
+	jQuery(this)
+		.mouseover(function(){
+			jQuery(this).children("ul").addClass("shown-sub");
+			jQuery(this).addClass("over");
+			//clearTimeout(cmsMenuActiveTimeId);
+			if (!jQuery(this).hasClass("active")) {
+				jQuery("#nav > li.active").removeClass("over");
+				jQuery("#nav > li.active > ul").removeClass("shown-sub");
+			}
+		})
+		.mouseout(function(){
+			jQuery(this).children("ul").removeClass("shown-sub");
+			jQuery(this).removeClass("over");
+		});
+});
+function cmsMenuActive() {
+	jQuery("#nav > li.active").addClass("over");
+	jQuery("#nav > li.active > ul").addClass("shown-sub");
+}
+cmsMenuActive();
+
+jQuery("#nav").mouseout(function(){
+	//cmsMenuActiveTimeId = setTimeout(function(){cmsMenuActive()},0);
+	cmsMenuActive();
+});
+</script>

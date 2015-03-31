@@ -1,0 +1,480 @@
+"%s was successfully added to your shopping cart.","%s blev tilføjet din indkøbskurv."
+,
+"&laquo; Back to Billing Information","&laquo; Tilbage til 'Betalingsoplysninger'"
+,
+"&laquo; Back to Select Addresses","&laquo; Tilbage til 'Vælg adresser'"
+,
+"&laquo; Back to Shopping Cart","&laquo; Tilbage til indkøbskurv"
+,
+"* Required Fields","* Skal udfyldes"
+,
+"Add New Address","Tilføj ny adresse"
+,
+"Add New Condition","Tilføj nyt vilkår"
+,
+"Add to Cart","Læg i kurv"
+,
+"Add to Compare","Tilføj til sammenligning"
+,
+"Add to Wishlist","Sæt på ønskeseddel"
+,
+"Address","Regningsadresse"
+,
+"Address %s of %s","Adresse %s af %s"
+,
+"After adding a product redirect to shopping cart","Efter tilføjelse af produkt, gå til kurven"
+,
+"Allow Guest Checkout","Tillad gæstebestilling"
+,
+"Already registered?","Allerede kunde?"
+,
+"An error occurred in the process of payment","En fejl opstod ved behandling af betalingen"
+,
+"Apply Coupon","Anvend kupon"
+,
+"Are you sure you would like to remove this item from the shopping cart?","Er du sikker på, at varen skal fjernes fra kurven?"
+,
+"Back","Tilbage"
+,
+"Back to Shipping Information","Tilbage til leveringsinformation"
+,
+"Based on your selection, you may be interested in the following items:","Baseret på indholdet af din kurv vil du måske også være interesseret i følgende varer:"
+,
+"Billing Address","Betalingsadresse"
+,
+"Billing Information","Betalingsadresse"
+,
+"Billing Information - %s","Faktureringsinformation - %s"
+,
+"Can not add item to shopping cart","Varen kunne ikke lægges i kurven."
+,
+"Can not apply coupon code.","Rabatkoden kunne ikke tildeles."
+,
+"Can't open overview page","Kan ikke åbne oversigtsside"
+,
+"Cancel Coupon","Annuller rabatkupon"
+,
+"Cannot remove item","Produktet kunne ikke fjernes"
+,
+"Cannot update shopping cart","Indkøbskurv kan ikke opdateres"
+,
+"Card Verification Number Visual Reference","Kontrolcifre (visuel reference)"
+,
+"Cart Subtotal:","Indkøbskurv subtotal:"
+,
+"Change","Rediger"
+,
+"Change Billing Address","Skift betalingsadresse"
+,
+"Checkbox text","Checkbox tekst"
+,
+"Checkout","Gå til kassen"
+,
+"Checkout Conditions","Bestillingsvilkår"
+,
+"Checkout Options","Bestillingsmuligheder"
+,
+"Checkout Section","Bestillingssektion"
+,
+"Checkout Terms and Conditions","Bestillingsvilkår"
+,
+"Checkout as Guest","Bestil som gæst"
+,
+"Checkout as a Guest or Register","Gå til bestilling som gæst eller opret dig som bruger"
+,
+"Checkout method","Bestillingsmetode"
+,
+"Checkout with Multiple Addresses","Bestil til flere adresser"
+,
+"City","By"
+,
+"Click <a href=""%s"" onclick=""this.target='_blank'"">here to print</a> a copy of your order confirmation.","Klik <a href=""%s"" onclick=""this.target='_blank'"">her for at printe</a> en kopi af din ordrebekræftelse."
+,
+"Close","Luk"
+,
+"Company","Firma"
+,
+"Condition Name","Navn på vilkår"
+,
+"Condition was successfully deleted","Vilkåret er slettet"
+,
+"Condition was successfully saved","Vilkåret er gemt"
+,
+"Configurable product image","Konfigurerbart produktbillede"
+,
+"Confirm Password","Bekræft password"
+,
+"Content","Indhold"
+,
+"Content Height","Indholdshøjde"
+,
+"Content Height (css)","Indholdshøjde (css)"
+,
+"Continue","Fortsæt"
+,
+"Continue Shopping","Fortsæt med at shoppe"
+,
+"Continue to Billing Information","Fortsæt til betalingsadresse"
+,
+"Continue to Review Your Order","Fortsæt til ordreoversigten"
+,
+"Continue to Shipping Information","Fortsæt til leveringsoplysninger"
+,
+"Country","Land"
+,
+"Coupon code ""%s"" is not valid.","Rabatkoden ""%s"" er ikke gyldig."
+,
+"Coupon code ""%s"" was applied successfully.","Rabatkoden ""%s"" er nu anvendt."
+,
+"Coupon code was canceled successfully.","Rabatkuponen blev annulleret."
+,
+"Create Billing Address","Opret betalingsadresse"
+,
+"Create Shipping Address","Opret leveringsadresse"
+,
+"Customer Address is not valid.","Customer Address is not valid."
+,
+"Data saving problem","Kunne ikke gemme."
+,
+"Default Billing","Betaling (standard)"
+,
+"Default Shipping","Levering (standard)"
+,
+"Delete Condition","Slet vilkår"
+,
+"Details","Detaljer"
+,
+"Disable Onepage Checkout","Deaktiver énsides-bestilling"
+,
+"Disabled","Deaktiveret"
+,
+"Discount Codes","Rabatkoder"
+,
+"Display Cart Summary","Visning af kurvoversigt"
+,
+"Display Shopping Cart Sidebar","Vis kurv i sidebar"
+,
+"Display item quantities","Vis antal af hvert produkt"
+,
+"Display number of items in cart","Vis samlet antal varer i kurven"
+,
+"Easy access to your order history and status","Nem adgang til din ordrehistorik og -status"
+,
+"Edit","Rediger"
+,
+"Edit Address","Rediger adresse"
+,
+"Edit Billing Address","Rediger betalingsadresse"
+,
+"Edit Items","Tilføj/fjern produkter"
+,
+"Edit Shipping Address","Rediger leveringsadresse"
+,
+"Edit Terms and Conditions","Rediger vilkår"
+,
+"Edit Your Cart","Rediger kurv"
+,
+"Email Address","Email adresse"
+,
+"Enable Terms and Conditions","Aktiver vilkår"
+,
+"Enabled","Aktiveret"
+,
+"Enter a New Address","Indtast ny adresse"
+,
+"Enter your coupon code if you have one.","Indtast din rabatkode her."
+,
+"Enter your destination to get a shipping estimate.","Indtast destination for at få et prisoverslag på levering"
+,
+"Error while deleting this condition. Please try again later.","Fejl ved sletning af vilkåret. Prøv igen senere."
+,
+"Error while saving this condition. Please try again later.","Fejl ved lagring af vilkåret. Prøv igen senere."
+,
+"Estimate Shipping and Tax","Prisoverslag på levering"
+,
+"Excl. Tax","Ekskl. moms"
+,
+"Fast and easy check out","Hurtig og nem betaling"
+,
+"Fax","Faxnummer"
+,
+"Forgot an Item?","Glemt et produkt?"
+,
+"Forgot your password?","Glemt dit password?"
+,
+"Get a Quote","Få et prisoverslag"
+,
+"Grand Total:","Total:"
+,
+"Grouped product image","Grupperet produktbillede"
+,
+"HTML","HTML"
+,
+"ID","ID"
+,
+"Incl. Tax","Inkl. moms"
+,
+"Invalid data","Ugyldig data"
+,
+"Invalid email address ""%s""","Ugyldig e-mail-adresse ""%s"""
+,
+"Invalid shipping method.","Ugyldig fragtmetode."
+,
+"Items","Produkter"
+,
+"Load customer quote error","Kunne ikke hente kundepriser"
+,
+"Loading next step...","Henter data..."
+,
+"Login","Log ind"
+,
+"Manage Checkout Terms and Conditions","Administrer handelsvilkår"
+,
+"Maximum display Recently added item(s)","Maks-antal senest tilføjede varer"
+,
+"Maximum qty allowed for Shipping to multiple addresses is %s","Det maksimale antal tilladt for at kunne fragte til flere adresser er %s"
+,
+"Move to Wishlist","Sæt på ønskeseddel"
+,
+"My Account","Min konto"
+,
+"My Cart","My Cart"
+,
+"My Cart (%s item)","Min indkøbskurv (%s vare)"
+,
+"My Cart (%s items)","Min indkøbskurv (%s varer)"
+,
+"My Cart Link","Link til indkøbskurv"
+,
+"New Address","Ny adresse"
+,
+"New Condition","Nyt vilkår"
+,
+"Order #","Ordre #"
+,
+"Order Review","Godkend ordre"
+,
+"Order Success","Ordrekvittering"
+,
+"Other items in your order","Andre produkter i din ordre"
+,
+"Password","Password"
+,
+"Payment Failed Email Reciever","E-mail-modtager for mislykket betaling"
+,
+"Payment Failed Email Sender","E-mail-afsender for mislykket betaling"
+,
+"Payment Failed Emails","E-mails for mislykket betaling"
+,
+"Payment Failed Template","Skabelon for mislykket betaling"
+,
+"Payment Information","Betalingsform"
+,
+"Payment Method","Betalingsform"
+,
+"Payment method is not defined","Betalingsform ikke valgt"
+,
+"Place Order","Gennemfør ordre"
+,
+"Please <a href=""%s"">continue shopping</a>.","<a href=""%s"">Shop videre</a>."
+,
+"Please agree to all Terms and Conditions before placing the order.","Accepter venligst alle vilkår før du gennemfører bestillingen."
+,
+"Please agree to all Terms and Conditions before placing the orders.","Accepter venligst alle vilkår før du gennemfører bestillingerne."
+,
+"Please enter a valid zip code. For example 90602 or 90602-1234.","Indtast venligst et gyldigt postnummer, eks. 6430 eller 8000."
+,
+"Please log in below:","Log venligst ind nedenfor:"
+,
+"Please select region, state or province","Vælg venligst region eller område"
+,
+"Please select shipping address for applicable items","Vælg venligst leveringsadresse for relevante produkter"
+,
+"Please select shipping methods for all addresses","Vælg venligst leveringsform for hver adresse"
+,
+"Price","Pris"
+,
+"Proceed to Checkout","Gå til bestilling"
+,
+"Product","Produkt"
+,
+"Product Name","Vare"
+,
+"Product does not exist","Produktet eksisterer ikke"
+,
+"Qty","Antal"
+,
+"Quote Lifetime (days)","Indkøbskurvens levetid (dage)"
+,
+"Recently added item(s)","Seneste tilføjede vare(r)"
+,
+"Register","Registrer"
+,
+"Register and save time!","Opret konto og spar tid!"
+,
+"Register to Create an Account","Opret dig som bruger, hvis du ønsker en konto"
+,
+"Register with us for future convenience:","Opret konto hos os for at gøre det nemmere fremover:"
+,
+"Remove","Fjern"
+,
+"Remove Item","Fjern vare"
+,
+"Remove Product","Fjern"
+,
+"Remove item","Slet artikel"
+,
+"Edit item parameters","Rediger artikel"
+,
+"Review Order","Godkend ordre"
+,
+"Review Order - %s","Gennemse ordre - %s"
+,
+"Sales","Salg"
+,
+"Save Condition","Gem vilkår"
+,
+"Save in address book","Gem i adressebog"
+,
+"Select Address","Vælg adresse"
+,
+"Select Addresses","Vælg adresser"
+,
+"Select Shipping Method","Vælg leveringsform"
+,
+"Select State/Province...","Vælg område..."
+,
+"Select a billing address from your address book or enter a new address.","Vælg en betalingsadresse fra dine adresser eller indtast en <a href=""#"" onclick=""billing.newAddress(true); return false;"">ny adresse</a>."
+,
+"Select a shipping address from your address book or enter a new address.","Vælg en leveringsadresse fra dine adresser eller indtast en <a href=""#"" onclick=""shipping.newAddress(true); return false;"">ny adresse</a>."
+,
+"Send Payment Failed Email Copy Method","Metode til afsendelse af kopi-e-mail for mislykket betaling"
+,
+"Send Payment Failed Email Copy To","Send kopi-e-mail for mislykket betaling til"
+,
+"Send to","Send til"
+,
+"Ship to Multiple Addresses","Levering til flere adresser"
+,
+"Ship to different address","Levering til anden adresse"
+,
+"Ship to this address","Levering til denne adresse"
+,
+"Shipping Address","Leveringsadresse"
+,
+"Shipping Information","Leveringsadresse"
+,
+"Shipping Method","Leveringsform"
+,
+"Shipping Methods","Leveringsformer"
+,
+"Shipping method has not been selected yet","Vælg venligst din ønskede leveringsform"
+,
+"Shipping selection is not applicable","Leveringsvalget er ikke brugbart"
+,
+"Shipping to","Levering til"
+,
+"Shopping Cart","Indkøbskurv"
+,
+"Shopping Cart Sidebar","Indkøbskurv sidebar"
+,
+"Shopping Cart is Empty","Indkøbskurven er tom"
+,
+"Show Content as","Vis indhold som"
+,
+"Some of the products you requested are not available in the desired quantity","Nogle af de produkter du forespørger er ikke tilgængelige i det ønskede antal"
+,
+"Some of the products you requested are unavailable","Nogle af de produkter du forespørger er ikke på lager"
+,
+"Sorry, Onepage Checkout is disabled.","Beklager, énsides-bestilling er deaktiveret."
+,
+"Sorry, guest checkout is not enabled. Please try again or contact store owner.","Beklager, gæstebestilling er ikke aktiveret. Prøv igen eller kontakt butiksejeren."
+,
+"Sorry, no quotes are available for this order at this time.","Vi undskylder! Prisoverslag kan ikke gives for denne ordre."
+,
+"State/Province","Område"
+,
+"Status","Status"
+,
+"Store View","Forretningsvisning"
+,
+"Street Address","Gade/vej"
+,
+"Street Address ","Gade/vej "
+,
+"Submitting order information...","Gennemfører ordre..."
+,
+"Subtotal","Subtotal"
+,
+"Telephone","Telefonnummer"
+,
+"Terms and Conditions","Handelsbetingelser"
+,
+"Terms and Conditions Information","Information om handelsvilkår"
+,
+"Terms and conditions","Handelsvilkår"
+,
+"Text","Tekst"
+,
+"Thank you for your purchase!","Vi takker for dit køb!"
+,
+"There are <a href=""%s""><strong>%s items</strong></a> in your cart.","Der er <a href=""%s""><strong>%s varer</strong></a> i din kurv."
+,
+"There is <a href=""%s""><strong>1 item</strong></a> in your cart.","Der er <a href=""%s""><strong>1 vare</strong></a> i din kurv."
+,
+"There is already a customer registered using this email address","Der findes allerede en kunde med den e-mailadresse"
+,
+"There was an error processing your order. Please contact us or try again later.","Der opstod en fejl under behandlingen af din ordre. Kontakt os eller prøv igen senere."
+,
+"This condition no longer exists","Dette vilkår eksisterer ikke længere"
+,
+"Total","Total inkl. 25% moms"
+,
+"Total for this address","Total for denne adresse"
+,
+"Unit Price","Stykpris"
+,
+"Update Qty &amp; Addresses","Opdater antal &amp; adresser"
+,
+"Update Shopping Cart","Opdater kurv"
+,
+"Update Total","Opdater total"
+,
+"Use Billing Address","Anvend betalingsadresse"
+,
+"We are processing your order and you will soon receive an email with details of the order. Once the order has shipped you will receive another email with a link to track its progress.","Din ordre bliver behandlet og du vil snarest modtage en e-mail med ordrekvittering.<br/>Så snart ordren er afsendt sender vi dig en e-mail med et link, hvor du kan følge ordren."
+,
+"You have no items in your shopping cart.","Du har ingen produkter i din kurv."
+,
+"You will receive an order confirmation email with details of your order and a link to track its progress.","En ordrebekræftelse er blevet sendt til din e-mail-adresse."
+,
+"Your Checkout Progress","Dit bestillingsforløb"
+,
+"Your order # is: %s","Ordrenummer: %s"
+,
+"Your order # is: <a href=""%s"">%s</a>","Dit ordrenummer er: <a href=""%s"">%s</a>"
+,
+"Your order has been received","Vi har modtaget din ordre."
+,
+"Your order number is: %s.","Dit ordrenummer er: %s."
+,
+"Zip/Postal Code","Postnummer"
+,
+"osCommerce Orders","osCommerce-ordrer"
+,
+"separate by "",""","adskil med "","""
+,
+"My Cart","Indkøbskurv"
+,
+"pcs.","stk."
+,
+"Type of Menus","Menu type"
+,
+"Maecenas sed diam eget risus varius blandit sit amet non magna.","Du vil nu modtage en email med en bekræftelse på din bestilling."
+,
+"Morbi leo risus, porta ac consectetur","Husk at din bestilling først er endeligt godkendt, når du har modtaget en SMS fra os."
+,
+"%s was updated in your shopping cart.","Din %s ordre er blevet ændret."
+,
+"There is already a customer registered using this email address. Please login using this email address or enter a different email address to register your account.","Der findes allerede en kunde med den e-mailadresse"
+"Please use date in the future between 10 a.m. and 9.30 p.m.","Brug venligst dato i fremtiden 10:00 til 21:30"

@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    Mage
+ * @package     Submarine_Favourites
+ * @copyright   Copyright (c) 2011 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+-->
+<config>
+    <modules>
+        <Submarine_Favourites>
+            <version>1.6.0.0</version>
+        </Submarine_Favourites>
+    </modules>
+    <global>
+        <blocks>
+            <favourites>
+                <class>Submarine_Favourites_Block</class>
+            </favourites>
+        </blocks>
+        <models>
+            <favourites>
+                <class>Submarine_Favourites_Model</class>
+                <resourceModel>favourites_resource</resourceModel>
+            </favourites>
+            <favourites_resource>
+                <class>Submarine_Favourites_Model_Resource</class>
+                <deprecatedNode>favourites_mysql4</deprecatedNode>
+                <entities>
+                    <favourites>
+                        <table>favourites</table>
+                    </favourites>
+                    <item>
+                        <table>favourites_item</table>
+                    </item>
+                    <item>
+                        <table>favourites_item</table>
+                    </item>
+                    <item_option><table>favourites_item_option</table></item_option>
+                </entities>
+            </favourites_resource>
+        </models>
+        <resources>
+            <favourites_setup>
+                <setup>
+                    <module>Submarine_Favourites</module>
+                </setup>
+            </favourites_setup>
+        </resources>
+        <template>
+            <email>
+                <favourites_email_email_template translate="label" module="favourites">
+                    <label>Share Favourites</label>
+                    <file>favourites_share.html</file>
+                    <type>html</type>
+                </favourites_email_email_template>
+            </email>
+        </template>
+        <events>
+            <checkout_cart_update_items_before>
+                <observers>
+                    <favourites>
+                        <class>favourites/observer</class>
+                        <method>processCartUpdateBefore</method>
+                    </favourites>
+                </observers>
+            </checkout_cart_update_items_before>
+            <checkout_cart_add_product_complete>
+                <observers>
+                    <favourites>
+                        <class>favourites/observer</class>
+                        <method>processAddToCart</method>
+                    </favourites>
+                </observers>
+            </checkout_cart_add_product_complete>
+        </events>
+        <favourites>
+            <item>
+                <product_attributes>
+                    <visibility/>
+                    <url_path/>
+                    <url_key/>
+                </product_attributes>
+            </item>
+        </favourites>
+        <helpers>
+            <favourites>
+                <class>Submarine_Favourites_Helper</class>
+            </favourites>
+            <favourites_configuration>
+                <class>Submarine_Favourites_Helper_Configuration</class>
+            </favourites_configuration>
+        </helpers>
+    </global>
+    <frontend>
+        <routers>
+            <favourites>
+                <use>standard</use>
+                <args>
+                    <module>Submarine_Favourites</module>
+                    <frontName>favourites</frontName>
+                </args>
+            </favourites>
+        </routers>
+        <translate>
+            <modules>
+                <Submarine_Favourites>
+                    <files>
+                        <default>Mage_Wishlist.csv</default>
+                    </files>
+                </Submarine_Favourites>
+            </modules>
+        </translate>
+        <layout>
+            <updates>
+                <favourites module="Submarine_Favourites">
+                    <file>favourites.xml</file>
+                </favourites>
+            </updates>
+        </layout>
+        <events>
+            <customer_login>
+                <observers>
+                    <favourites>
+                        <class>favourites/observer</class>
+                        <method>customerLogin</method>
+                    </favourites>
+                </observers>
+            </customer_login>
+            <customer_logout>
+                <observers>
+                    <favourites>
+                        <class>favourites/observer</class>
+                        <method>customerLogout</method>
+                    </favourites>
+                </observers>
+            </customer_logout>
+        </events>
+        <!--<secure_url>
+            <favourites>/favourites/</favourites>
+        </secure_url>-->
+    </frontend>
+    <admin>
+        <routers>
+            <favourites>
+                <use>admin</use>
+                <args>
+                    <module>Submarine_Favourites</module>
+                    <frontName>favourites</frontName>
+                </args>
+            </favourites>
+        </routers>
+    </admin>
+    <adminhtml>
+        <translate>
+            <modules>
+                <Submarine_Favourites>
+                    <files>
+                        <default>Mage_Wishlist.csv</default>
+                    </files>
+                </Submarine_Favourites>
+            </modules>
+        </translate>
+    </adminhtml>
+    <default>
+        <favourites>
+            <general>
+                <active>1</active>
+            </general>
+            <email>
+                <email_identity>general</email_identity>
+                <email_template>favourites_email_email_template</email_template>
+            </email>
+        </favourites>
+    </default>
+</config>

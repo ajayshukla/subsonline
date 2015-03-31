@@ -1,0 +1,90 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2011 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * @see Mage_Checkout_Block_Agreements
+ */
+?>
+
+<?php if (!$this->getAgreements()) return; ?>
+<form action="" id="checkout-agreements" onsubmit="return false;">
+<ol class="checkout-agreements">
+<?php foreach ($this->getAgreements() as $_a): ?>
+    <li>
+	<?php /*?>
+        <div class="agreement-content"<?php echo ($_a->getContentHeight() ? ' style="height:' . $_a->getContentHeight() . '"' : '')?>>
+            <?php if ($_a->getIsHtml()):?>
+                <?php echo $_a->getContent() ?>
+            <?php else:?>
+                <?php echo nl2br($this->htmlEscape($_a->getContent())) ?>
+            <?php endif; ?>
+        </div>
+        <?php */?>
+		
+        <p class="agree">
+            <input type="checkbox" id="agreement-<?php echo $_a->getId()?>" name="agreement[<?php echo $_a->getId()?>]" value="1" title="<?php echo $this->htmlEscape($this->stripTags($_a->getCheckboxText())) ?>" class="checkbox" />
+			<label for="agreement-<?php echo $_a->getId()?>">&nbsp;<?php echo $_a->getIsHtml() ? $_a->getCheckboxText() : $this->htmlEscape($_a->getCheckboxText()) ?>
+			<img src="<?php echo $this->getSkinUrl()."images/ajax-loader.gif" ?>" id="agreementLoader">
+			</label>
+			<div id="agreementWrap">
+				<div class="popup agreement terms" style="display:none;">
+					<div id="content_agreement"></div>
+                    <button id="cancelBtnAgreementPopup" name="Close" title="<?php echo $this->__("Close") ?>" class="cancel" style="float:left;margin-bottom:0;" type="button"><span><span><?php echo $this->__("Close"); ?></span></span></button>
+				</div>
+			</div>
+			<script type="text/javascript">
+				var loadAgreement = false;
+				var aAgreement = jQuery("label[for^='agreement-']>a");
+				jQuery.get(aAgreement.attr('href'), function(data){
+					loadAgreement = true;
+					jQuery("#agreementLoader").hide();
+					jQuery("#content_agreement").html(data);
+					jQuery(".content").prepend(jQuery("#agreementWrap").html());
+					jQuery("#agreementWrap").html('');
+					var title = jQuery(".title.white").clone();
+					jQuery(".title.white").remove();
+					jQuery(".popup.agreement").prepend(title);
+				});
+				aAgreement.click(function(){
+					if (loadAgreement) {
+						jQuery("html:not(:animated),body:not(:animated)").animate({scrollTop: 0}, 100);
+						jQuery("#dialog_overlay").show();
+						jQuery(".popup.agreement").show(300);
+					}
+					return false;
+				});
+				jQuery("#cancelBtnAgreementPopup").live("click",function(){
+					jQuery("#dialog_overlay").hide();
+					jQuery(".popup.agreement").hide(300);
+				});
+				
+			</script>
+        </p>
+    </li>
+<?php endforeach ?>
+</ol>
+</form>

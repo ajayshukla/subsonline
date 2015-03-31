@@ -1,0 +1,55 @@
+<div id="dialog_overlay" style="display: none;"></div>
+
+<div id="login-popup" style="display:none;">
+    <div class="popup login" style="padding-bottom: 30px;">
+        <h2><?php echo Mage::helper('productview')->__('Login or '); ?><a href="/customer/account/create/" class="red"><?php echo Mage::helper('productview')->__('Register'); ?></a></h2>
+        <form action="<?php echo $this->getUrl('customer/account/loginPost') ?>" method="post" id="login-form-popup">
+
+			<div id="elements_composition_form" style="display: none"></div>
+
+            <div class="fieldset">
+                <ul class="form-list">
+                    
+                    <li class="fields">
+                        <div class="field">
+                            <label for="email">
+                                <div class="lblock"><?php echo $this->__('Email') ?></div>
+                            </label>
+                            <div class="input-box">
+                                <input type="text" name="login[username]" id="email" class="rblock email required-entry validate-email" title="<?php echo $this->__('Email') ?>" />
+                            </div>
+                            <em>*</em>
+                        </div>
+                    </li>
+                    
+                    <li class="fields">
+                        <div class="field">
+                            <div class="input-box" style="margin-left:130px;">
+                                <div id="status_error" style="display: none;" class="validation-advice"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="fields">
+                        <div class="field">
+                            <label for="pass"><?php echo $this->__('Password') ?></label>
+                            <div class="input-box">
+                                <input type="password" name="login[password]" class="rblock required-entry validate-password" id="pass" title="<?php echo $this->__('Password') ?>" />
+                            </div>
+                            <em>*</em>
+                        </div>
+                    </li>
+                </ul>
+                <div class="bottom" style="padding-left: 130px;">
+                    <a href="<?php echo $this->getUrl('customer/account/forgotpassword') ?>" class="fogot-link"><?php echo $this->__('Forgot Your Password?') ?></a>
+                    <div class="paddb"><button type="submit" style="float: left;" class="login" title="<?php echo $this->__('SIGN IN') ?>" name="send" id="send2"><span><span><?php echo $this->__('SIGN IN') ?></span></span></button></div>
+                    <span id="login-form-popup-ajax" class="ajax-loader" style="display:none"></span>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+<!--
+    var loginForm = new SubmarineForm('login-form-popup');
+    loginForm.form.setAttribute('action', "<?php echo $this->getUrl('ajax/customer_account/loginCustomer') ?>");
+//--></script>

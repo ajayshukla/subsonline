@@ -1,0 +1,11 @@
+<?php $item = $this->getItem(); ?>
+<div class="title white"><?php echo $this->__('News'); ?></div>
+<div class="std">
+<h1><?php echo $item->getTitle(); ?></h1>
+<?php echo Mage::helper('knews')->getImage($item['image'], 200, 200); ?>
+  <p><?php echo $item->getDate(); ?></p>
+	<p><?php echo $item->getDescription(); ?></p><br/>
+<p>
+	<a href="<?php echo Mage::helper('knews')->getUrl(); ?>"><?php echo $this->__('Back to list') ?></a>
+</p>
+</div>
