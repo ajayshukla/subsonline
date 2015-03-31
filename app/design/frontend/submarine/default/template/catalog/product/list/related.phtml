@@ -1,0 +1,109 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2011 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+
+<?php if($this->getItems()->getSize()): ?>
+<div class="similar_products">
+    <div class="title block">
+        <?php echo $this->__('Similar products') ?>
+    </div>
+        <ul class="products-grid first odd" id="block-related">
+        <?php foreach($this->getItems() as $_item): ?>
+            <?php $_composition_form = (int)$_item->getData('compositionform'); ?>
+            <li class="item">
+                <div class="product-image">
+                    <?php if ($_composition_form) : ?>
+                    <a href="#" onclick="loadComposition('<?php echo $this->getUrl('productview/product/composition', array('id' => $_item->getId())) ?>', '<?php echo $_item->getId()?>'); return false;" title="<?php echo $this->htmlEscape($_item->getName()) ?>" class="product-image">
+                        <img src="<?php echo $this->helper('catalog/image')->init($_item, 'small_image')->resize(168,123) ?>" width="168" height="123" alt="<?php echo $this->htmlEscape($_item->getName()) ?>" />
+                    </a>
+                    <?php else: ?>
+                    <a href="<?php echo $_item->getProductUrl() ?>" title="<?php echo $this->htmlEscape($_item->getName()) ?>" class="product-image">
+                        <img src="<?php echo $this->helper('catalog/image')->init($_item, 'small_image')->resize(168,123) ?>" width="168" height="123" alt="<?php echo $this->htmlEscape($_item->getName()) ?>" />
+                    </a>
+                    <?php endif; ?>
+                </div>
+                <h2 class="product-name"><span><?php echo $this->htmlEscape($_item->getName()) ?></span></h2>
+                <div class="bottom_info">
+                    <div class="small_descr">
+						<p><?php echo $this->stripTags($_item->getShortDescription()); ?></p>
+						<?php echo $this->getPriceHtml($_item, true) ?>
+						<a href="<?php echo $_item->getProductUrl() ?>"><?php echo $this->__('More details'); ?></a>
+					</div>
+                    <div align="center" class="actions">
+                        <?php if($_item->isSaleable()): ?>
+                            <?php if ($_composition_form) : ?>
+                                <button type="button" title="<?php echo $this->__('ORDER') ?>" class="button btn-cart" onclick="loadComposition('<?php echo $this->getUrl('productview/product/composition', array('id' => $_item->getId())) ?>', '<?php echo $_item->getId()?>')"><span><span><?php echo $this->__('ORDER') ?></span></span></button>
+                            <?php else: ?>
+                                <button type="button" title="<?php echo $this->__('ORDER') ?>" class="button btn-cart" onclick="setLocationAjax('<?php echo $this->getAddToCartUrl($_item) ?>','<?php echo $_item->getId()?>')"><span><span><?php echo $this->__('ORDER') ?></span></span></button>
+                                <span id='ajax_loader<?php echo $_item->getId()?>' style='display:none'><img src='<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif')?>'/></span>
+                            <?php endif; ?>
+                        <?php else: ?>
+                            <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </li>
+        <?php endforeach ?>
+        </ul>
+        <script type="text/javascript">decorateList('block-related', 'none-recursive')</script>
+    <script type="text/javascript">
+    //<![CDATA[
+    $$('.related-checkbox').each(function(elem){
+        Event.observe(elem, 'click', addRelatedToProduct)
+    });
+
+    var relatedProductsCheckFlag = false;
+    function selectAllRelated(txt){
+        if (relatedProductsCheckFlag == false) {
+            $$('.related-checkbox').each(function(elem){
+                elem.checked = true;
+            });
+            relatedProductsCheckFlag = true;
+            txt.innerHTML="<?php echo $this->__('unselect all') ?>";
+        } else {
+            $$('.related-checkbox').each(function(elem){
+                elem.checked = false;
+            });
+            relatedProductsCheckFlag = false;
+            txt.innerHTML="<?php echo $this->__('select all') ?>";
+        }
+        addRelatedToProduct();
+    }
+
+    function addRelatedToProduct(){
+        var checkboxes = $$('.related-checkbox');
+        var values = [];
+        for(var i=0;i<checkboxes.length;i++){
+            if(checkboxes[i].checked) values.push(checkboxes[i].value);
+        }
+        if($('related-products-field')){
+            $('related-products-field').value = values.join(',');
+        }
+    }
+    //]]>
+    </script>
+</div>
+<?php endif ?>

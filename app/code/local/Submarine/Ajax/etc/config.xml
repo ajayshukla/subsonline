@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Submarine_Ajax>
+            <version>0.1.0</version>
+        </Submarine_Ajax>
+    </modules>
+    <frontend>
+        <routers>
+            <ajax>
+                <use>standard</use>
+                <args>
+                    <module>Submarine_Ajax</module>
+                    <frontName>ajax</frontName>
+                </args>
+            </ajax>
+        </routers>
+        <layout>
+            <updates>
+                <ajax>
+                    <file>ajax.xml</file>
+                </ajax>
+            </updates>
+        </layout>
+		<secure_url>
+			<ajax>/ajax/customer_account/editPost/</ajax>
+		</secure_url>
+    </frontend>
+</config>

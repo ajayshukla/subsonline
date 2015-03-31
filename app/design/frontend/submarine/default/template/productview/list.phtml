@@ -1,0 +1,125 @@
+<?php
+    $_productCollection=$this->getLoadedProductCollection();
+    $_helper = $this->helper('catalog/output');
+
+    $_category = Mage::registry('current_category');
+    $oBundleProducts = Mage::getModel('catalog/category')->load($_category->getId())->getProductCollection()
+            ->addAttributeToSelect('*')->addAttributeToFilter('type_id', array('eq' => Mage_Catalog_Model_Product_Type::TYPE_BUNDLE));
+
+	
+    if ($oBundleProducts->count() > 0) {
+        $oFirstBundleProduct = $oBundleProducts->getFirstItem();
+        if (!Mage::registry('product') && $oFirstBundleProduct->getId()) {
+            $product = Mage::getModel('catalog/product')->load($oFirstBundleProduct->getId());
+            Mage::register('product', $product);
+            Mage::register('current_product', $product);
+        }
+?>
+<div id="composition_form_main" style="display: none;">
+    <?php echo $this->getChildHtml('product.info'); ?>
+</div>
+<?php } ?>
+
+<div id="product_list_main">
+<script>
+	if (/(\?form)/gi.test(window.location.href)) {
+		jQuery('#product_list_main').hide(0);
+		jQuery('#composition_form_main').show(0);
+		var rx = /\?form=(\d+)/gi;
+		var parts = rx.exec(window.location.href);
+		if (parts != null && parseInt(parts[1]) > 0) {
+			loadProductById(parseInt(parts[1]));
+		}
+	}
+</script>
+    <div class="title gray"><?php echo $_helper->categoryAttribute($_category, $_category->getName(), 'name') ?>
+        <span class="suborders right">
+        <?php
+            if ($oBundleProducts->count() > 0 && $oFirstBundleProduct): ?>
+                <a href="#" id="show_composition_form"><?php echo $this->__('Your %s orders', $oFirstBundleProduct->getName()); ?></a>
+                <script>
+                jQuery("#show_products_list").click(function(){
+                    jQuery('#composition_form_main').hide(0, function() {
+                        jQuery('#product_list_main').show(0);
+                    });
+                    return false;
+                });
+                jQuery("#show_composition_form").click(function() {
+                    jQuery('#product_list_main').hide(0, function(){
+                        jQuery('#composition_form_main').show(0);
+                    });
+                    return false;
+                });
+                </script>
+            <?php else: ?>
+            <?php
+                $oSimpleProduct = $_productCollection->getFirstItem();
+                $aSku = explode('-', $oSimpleProduct->getSku());
+                if ($aSku[0] == 'drinks') { ?>
+                    <span class="suborders right red"><a href="<?php echo $_category->getParentCategory()->getUrl(); ?>"><?php echo $this->__('Show %s types', 'Drikke') ?></a></span>
+                <?php } ?>
+            <?php endif; ?>
+        </span>
+    </div>
+
+	<?php if ($this->getWhiteTitle() == "parent") { ?>
+		<div class="title white"><span class="suborders left"><a href="<?php echo $_category->getParentCategory()->getUrl() ?>"><?php echo $this->__("View all %s", $_category->getParentCategory()->getName()); ?></a></span></div>
+	<?php } ?>
+
+    <div class="content">
+    <?php if(!$_productCollection->count()): ?>
+    <p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
+    <?php else: ?>
+        <?php $_collectionSize = $_productCollection->count() ?>
+        <?php $_columnCount = $this->getColumnCount(); ?>
+        <?php $i=0; foreach ($_productCollection as $_product): ?>
+        <?php $_composition_form = (int)$_product->getData('compositionform'); ?>
+
+            <?php if ($i++%$_columnCount==0): ?>
+            <ul class="products-grid">
+            <?php endif ?>
+                <li class="item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
+                    <div class="product-image">
+                        <?php if ($_composition_form) : ?>
+                        <a href="#" onclick="loadProductById(<?php echo $_product->getId() ?>); return false;" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image">
+                            <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(168,123); ?>" width="168" height="123" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+                        </a>
+                        <?php else: ?>
+                        <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image">
+                            <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(168,123); ?>" width="168" height="123" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+                        </a>
+                        <?php endif; ?>
+                    </div>
+                    <h2 class="product-name"><span><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></span></h2>
+                    <?php if($_product->getRatingSummary()): ?>
+                    <?php echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+                    <?php endif; ?>
+                    <div class="bottom_info">
+                    <div class="small_descr">
+                        <p><?php echo $this->stripTags($_product->getShortDescription()); ?></p>
+                        <?php echo $this->getPriceHtml($_product, true) ?>
+                        <a href="<?php echo $_product->getProductUrl() ?>"><?php echo $this->__('More details'); ?></a>
+                    </div>
+                        <div align="center" class="actions">
+                            <?php if($_product->isSaleable()): ?>
+                                <?php if ($_composition_form) : ?>
+                                    <button type="button" title="<?php echo Mage::helper("productview")->__('Order') ?>" class="button btn-cart" onclick="loadProductById(<?php echo $_product->getId() ?>); return false;"><span><span><?php echo Mage::helper("productview")->__('Order') ?></span></span></button>
+                                <?php else: ?>
+                                    <button type="button" title="<?php echo Mage::helper("productview")->__('Order') ?>" class="button btn-cart" onclick="setLocationAjax('<?php echo $this->getAddToCartUrl($_product) ?>','<?php echo $_product->getId()?>')"><span><span><?php echo Mage::helper("productview")->__('Order') ?></span></span></button>
+                                    <span id='ajax_loader<?php echo $_product->getId()?>' style='display:none'><img src='<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif')?>'/></span>
+                                <?php endif; ?>
+                                <?php ?>
+                            <?php else: ?>
+                                <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </li>
+            <?php if ($i%$_columnCount==0 || $i==$_collectionSize): ?>
+            </ul>
+            <?php endif ?>
+            <?php endforeach ?>
+            <script type="text/javascript">decorateGeneric($$('ul.products-grid'), ['odd','even','first','last'])</script>
+    <?php endif; ?>
+    </div>
+</div>

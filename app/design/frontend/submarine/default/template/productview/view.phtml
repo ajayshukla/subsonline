@@ -1,0 +1,423 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2011 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Product view template
+ *
+ * @see Mage_Catalog_Block_Product_View
+ * @see Mage_Review_Block_Product_View
+ */
+?>
+
+<?php $_helper = $this->helper('catalog/output'); ?>
+<?php $_product = $this->getProduct(); ?>
+
+<?php 
+
+    if ($this->getRequest()->getActionName() == "configure") {?>
+        <script>
+            var editMode = true;
+        </script>
+        <?php
+    } else { ?>
+        <script>
+            var editMode = false;
+        </script>
+        <?php
+    }
+	$aCatIds = $_product->getCategoryIds();
+    if (isset($aCatIds[0])) {
+        $oCategory = Mage::getModel('catalog/category')->setStoreId($_product)->load($aCatIds[0]);
+    }
+?>
+
+<script type="text/javascript">
+    var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
+</script>
+
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+<div class="title gray">
+	<?php
+		if (isset($_product) && isset($oCategory)) {
+			if ($_product->getSku() == "extras") {
+				$name = $oCategory->getName();
+			} else {
+				$name = $_product->getName();
+			}
+		}
+	?>
+	<span class="suborders right red"><a id="show_products_list" href="<?php echo (isset($oCategory)) ? $oCategory->getUrl() : ""?>"><?php echo Mage::helper('productview')->__('Show %s types', ((isset($name)) ? $name : "")); ?> </a></span>
+	<span class="order_subs"><?php echo $this->__("Order %s", $_product->getName()); ?></span>
+</div>
+
+<div id="composition_form">
+    <div class="content">
+        <form action="<?php echo $this->getSubmitUrl($_product) ?>" method="post" id="product_addtocart_form"<?php if($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+            <?php if ($this->helper('favourites')->isAllow()) : ?>
+            <div id="addfavname-popup" style="display:none;" class="popup favorite_product">
+                <ul class="form-list">
+                    <li class="fields">
+                        <div class="field">
+                            <label for="description">
+                                <div class="lblock"><?php echo $this->__('Name your favorite') ?><br>(<?php echo $this->__('5 - 25 characters') ?>)</div>
+                            </label>
+                            <div class="input-box">
+                                <input type="text" name="description" id="description" class="required-entry validate-length minimum-length-5 maximum-length-25" maxlength="25" />
+                            </div>
+                            <em>*</em>
+                        </div>
+                    </li>
+                </ul>
+                <div class="bottom" style="padding-left: 130px;">                    
+					<button id="btn_favorite" class="big_button" onclick="productAddToCartForm.submitLight(); return false;">
+                        <span><?php echo $this->__("Add to my Favorite list"); ?></span>
+                    </button>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <div class="no-display">
+                <input type="hidden" name="product" value="<?php echo $_product->getId() ?>" />
+                <input type="hidden" name="related_product" id="related-products-field" value="" />
+            </div>
+
+            <div class="composition"><span><?php echo $this->__('Choose your composition:') ?></span>
+                <div class="box" style="position: absolute; right: 13px; top: 9px;">
+                    <?php 
+                    $product_id = array();
+                    if ($this->helper('wishlist')->getWishlist()->getItemsCount() > 0): ?>
+                    <?php 
+                        foreach ($this->helper('wishlist')->getWishlist()->getItemCollection() as $item) {
+                            $product_id[] = $item->getProductId();
+                        }
+                    ?>
+                    <?php if (in_array($_product->getId(), $product_id)) : ?>
+                    <div id="favorite_product" class="bundle_title"><div class="expand"><?php echo $this->__('Choose your favorite') ?></div></div>
+                            <ul class="bundles favorite_product" id="ul-favorite" style="display: none;">
+                            <?php
+                                $wishlistItemCollection = $this->helper('wishlist')->getWishlist()->getItemCollection();
+                                foreach($wishlistItemCollection as $item) {
+                                    if ($_product->getId() == $item->getProductId()) { ?>
+                                        <li id="li_bundle-wishlist-<?php echo $item->getId(); ?>-<?php echo $_product->getId(); ?>" onclick="loadWishList(<?php echo $item->getId(); ?>, <?php echo $_product->getId(); ?>)" style="height: 30px; line-height: 30px;"><span class="fill_name" style="padding-left: 8px; float: left; font-weight: normal; text-transform: none; color: #000"><?php echo $item->getDescription(); ?></span></li>
+                                    <?php
+                                    }
+                                }?>
+                            </ul>
+                    <?php else: ?>
+                        <div id="favorite_product" class="bundle_title disabled"><?php echo $this->__('Choose your favorite') ?></div>
+                    <?php endif; ?>
+                    <?php else: ?>
+                        <div id="favorite_product" class="bundle_title disabled"><?php echo $this->__('Choose your favorite') ?></div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <?php echo $this->getChildHtml('other');?>
+            <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+                <?php echo $this->getChildChildHtml('container1', '', true, true) ?>
+            <?php endif;?>
+
+            <div class="fillings">
+            <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+                <?php echo $this->getChildChildHtml('container2', '', true, true) ?>
+            <?php endif;?>
+            </div>
+            <div class="order_fillings">
+                    <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                    <span style="float: left">
+                        <a id="addwishlist" href="#" onclick="productAddToCartForm.favoriteProductLinkLight(); return false;" class="link-wishlist"><?php echo $this->__('Add to favorites') ?></a>
+                    </span>
+                    <?php endif; ?>
+                <?php echo $this->getChildHtml('addtocart') ?>
+                <?php echo $this->getChildHtml('product_type_data') ?>
+            </div>
+        </form>
+        <script type="text/javascript">
+        //<![CDATA[
+			var productAddToCartForm = new VarienForm('product_addtocart_form');
+            // @param string ('product' | 'filling')
+            productAddToCartForm.type = 'product';
+            productAddToCartForm.submit = function(button, url) {
+
+                    Validation.add('validate-sub', '<?php echo __('Please choose')?>', 
+                    {include : ['validate-greater-than-zero']});
+
+                    if (this.validator.validate()) {
+                            var form = this.form;
+                            var e = null;
+                            if (!editMode) {
+                                // Start of our new ajax code
+                                url = '<?php echo $this->getSubmitUrl($_product) ?>';
+                                var data = jQuery('#product_addtocart_form').serialize();
+                                data += '&isAjax=1';
+                                jQuery('#ajax_loader').show();
+                                try {
+                                        jQuery.ajax( {
+                                                url : url,
+                                                dataType : 'json',
+                                                type : 'post',
+                                                data : data,
+                                                success : function(data) {
+                                                    jQuery('#ajax_loader').hide();
+                                                    if(data.status == 'ERROR'){
+                                                            alert(data.message);
+                                                    }else{
+                                                        if(jQuery('#sidebar')){
+                                                            jQuery('#composition_form').hide();
+                                                            jQuery('.create-new-order').show();
+                                                            jQuery('#sidebar').html(data.sidebar);
+                                                            jQuery('.toplinks').find('a[href="/checkout/cart"]').html('<?php echo __('Basket')?> (' + data.cart_items_count + ')');
+															clearForm();
+                                                        }
+                                                    }
+                                                }
+                                        });
+                                } catch (e) {
+                                }
+                                // End of our new ajax code
+                            } else {
+                                try {
+                                    this.form.submit();
+                                    } catch (e) {
+                                }
+                            }
+                            if (e) {
+                                throw e;
+                            }
+                    }
+            }.bind(productAddToCartForm);
+
+            productAddToCartForm.favoriteProductLinkLight = function() {
+                Validation.add('validate-sub', '<?php echo __('Please choose')?>', 
+                    {include : ['validate-greater-than-zero']});
+                if (this.validator.validate()) {
+                    productAddToCartForm.type = 'product';
+
+                    var popup = $('addfavname-popup');
+                    var dialog = $('dialog_overlay');
+
+                    if (popup.offsetWidth) {
+                        dialog.hide();
+                        popup.hide()
+                    } else {
+                        popup.show();
+                        dialog.show();
+                    }
+
+                    $('dialog_overlay').observe('click', function(e) {
+                        $('dialog_overlay').hide();
+                        $('addfavname-popup').hide();
+                        Event.stop(e);
+                    });
+                }
+            }.bind(productAddToCartForm);
+
+            productAddToCartForm.submitLight = function() {
+        <?php if ($this->helper('favourites')->isAllow()) : ?>
+                var isLogin = <?php echo ($this->helper('customer')->isLoggedIn() ? 1 : 0); ?>;
+                var type    = '';
+                var url     = '';
+                switch (productAddToCartForm.type) {
+                    case 'filling':
+                        url  = '<?php echo $this->helper('favourites')->getAddUrl($_product); ?>';
+                        type = 'filling';
+                        break;
+                    case 'product':
+                        url = '<?php echo $this->helper('favourites')->getAddWishlistUrl($_product); ?>';
+                        type = 'product';
+                        break;
+                    default:
+                        alert('Error occured');
+                        return false;
+                }
+
+				Translator.add('Text length does not satisfy specified text range.', '<?php echo $this->__('Text length does not satisfy specified text range.') ?>');
+
+                if(this.validator) {
+
+                    if (productAddToCartForm.type == 'product') {
+                        Validation.add('validate-sub', '<?php echo __('Please choose')?>', 
+                        {include : ['validate-greater-than-zero']});
+                    } else {
+                        delete Validation.methods['validate-sub'];
+                    }
+
+                    if (this.validator.validate()) {
+                        if (isLogin == 1) {
+							if (url) {
+								this.form.action = url;
+							}
+							var data = jQuery('#product_addtocart_form').serialize();
+							jQuery.ajax( {
+									url : url,
+									dataType : 'json',
+									type : 'post',
+									data : data,
+									success : function(data) {
+										jQuery('#ajax_loader').hide();
+										if(data.status == 'ERROR'){
+												alert(data.message);
+										}else{
+											if (data.sidebar['type'] == 'favorite_product') {
+												loadFavoriteProduct(data, '<?php echo $this->helper('favourites')->getFavoriteProductUrl($_product); ?>');
+											} else if (data.sidebar['type'] == 'favorite_filling') {
+												loadFavoriteFilling(data, '<?php echo $this->helper('favourites')->getFavoriteFillingUrl($_product);; ?>');
+											}
+
+											$('addfavname-popup').hide();
+											$('dialog_overlay').hide();
+										}
+									}
+							});
+						} else {
+							var favourite_url = '';
+							if (type == 'product') {
+								favourite_url = '<?php echo $this->helper('favourites')->getAjaxFavoriteProductUrl($_product) ?>'
+							} else {
+								favourite_url = '<?php echo $this->helper('favourites')->getAjaxFavoriteFillingUrl($_product) ?>'
+							}
+							$('addfavname-popup').hide();
+							var obj_product_form = jQuery('#product_addtocart_form').find('input');
+							var data = jQuery(obj_product_form).serialize();
+							jQuery.ajax( {
+								url : favourite_url,
+								dataType : 'json',
+								type : 'post',
+								data : data,
+								success : function(data) {
+									if (data.status == "OK") {
+										showLoginForm();
+									}
+								}
+							});
+
+						}
+                    }
+					
+					$('dialog_overlay').observe('click', function(e) {
+                        $('dialog_overlay').hide();
+                        $('addfavname-popup').hide();
+						jQuery('#save_favorite').val(0);
+						jQuery('#save_favorite_filling').val(0);
+						jQuery('#elements_composition_form').empty();
+                        Event.stop(e);
+                    });
+                }
+        <?php endif; ?>
+            }.bind(productAddToCartForm);
+
+            jQuery(document).ready(function() {
+                var addFavLink = $$('a#addfilling')[0];
+                if (addFavLink) {
+                    addFavLink.observe('click', function(e) {
+
+                        productAddToCartForm.type = 'filling';
+
+                        var popup = $('addfavname-popup');
+                        var dialog = $('dialog_overlay');
+
+                        if (popup.offsetWidth) {
+                            dialog.hide();
+                            popup.hide()
+                        } else {
+                            popup.show();
+                            dialog.show();
+                        }
+                        Event.stop(e);
+                    });
+                    $('dialog_overlay').observe('click', function(e) {
+                        $('dialog_overlay').hide();
+                        $('addfavname-popup').hide();
+                        Event.stop(e);
+                    });
+                }
+
+            });
+        //]]>
+        </script>
+
+        <div class="product-collateral">
+        <?php foreach ($this->getChildGroup('detailed_info', 'getChildHtml') as $alias => $html):?>
+                <div class="box-collateral <?php echo "box-{$alias}"?>">
+                    <?php if ($title = $this->getChildData($alias, 'title')):?>
+                    <h2><?php echo $this->escapeHtml($title); ?></h2>
+                    <?php endif;?>
+                    <?php echo $html; ?>
+                </div>
+        <?php endforeach;?>
+            <?php echo $this->getChildHtml('upsell_products') ?>
+            <?php echo $this->getChildHtml('product_additional_data') ?>
+        </div>
+    </div>
+
+    <div class="fillings_rounded"></div>
+
+</div>
+
+<div align="center" class="create-new-order">
+    <button onclick="showHideCreateOrderForm()" style="margin-top: 100px; height: 38px; background: url('<?php echo $this->getSkinUrl("/images/button_big_gradient.png")?>')" title="<?php echo Mage::helper("productview")->__('Create new ') . $_product->getName() ?>" type="button">
+        <span>
+            <span><?php echo Mage::helper("productview")->__('Create new ') . $_product->getName() ?></span>
+        </span>
+    </button>
+</div>
+
+<script>
+    jQuery(document).ready(function() {
+        loadDrinks();
+        loadTabs();
+		<?php 
+			$session = Mage::getSingleton('customer/session');
+			if ($session->getBeforeWishlistRequest()) {
+				$requestParams = $session->getBeforeWishlistRequest();
+				if (isset($requestParams['product_id']) && isset($requestParams['wishlist_item_id'])) { ?>
+					loadWishList(<?php echo $requestParams['wishlist_item_id']; ?>, <?php echo $requestParams['product_id']; ?>);
+				<?php } else {
+					$elements = $requestParams['bundle_option'];
+					
+					foreach ($elements as $key=>$item) {
+						if (is_array($item)) {
+							foreach ($item as $item_filling) { ?>
+								jQuery('#bundle-option-<?php echo $key ?>-<?php echo $item_filling; ?>').attr("checked","checked");
+								bundle.changeSelection(jQuery('#bundle-option-' + <?php echo $key ?> + '-' + <?php echo $item_filling; ?>)[0]);
+							<?php }
+						} else { ?>
+							jQuery('#bundle-option-<?php echo $key ?>-<?php echo $item; ?>').attr("checked","checked");
+							bundle.changeSelection(jQuery('#bundle-option-' + <?php echo $key ?> + '-' + <?php echo $item; ?>)[0]);
+						<?php
+						}
+					}
+					?>
+					setItems();
+					var parts = jQuery('.bundles.filling').attr('id').split('-');
+					editOrderFavoriteFilling(parts[1]);
+					<?php
+				}
+				$session->unsBeforeWishlistRequest();
+			}
+		?>
+    });
+</script>

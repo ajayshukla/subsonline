@@ -1,0 +1,131 @@
+<?php
+/**
+ * Copyright ePay | Dit Online Betalingssystem, (c) 2010.
+ * 
+ * This program is free software. You are allowed to use the software but NOT allowed to modify the software. 
+ * It is also not legal to do any changes to the software and distribute it in your own name / brand. 
+ */
+//
+// Load the epay standard object
+//
+$standard = Mage::getModel('epay/standard');
+?>
+<fieldset class="form-list">
+    <?php $_code=$this->getMethodCode() ?>
+    <ul id="payment_form_<?php echo $_code ?>" style="display:none">
+        <li>											
+            <?php echo (($standard->getConfigData('integrated') == '1') ? $this->__('EPAY_LABEL_1') : $this->__('EPAY_LABEL_2')) ?>
+            <?php
+            	if ($standard->showTrustedList()) {
+				        ?>
+				        <br><br>
+				        <?php
+				        //
+				        // Show trusted logos
+				        //
+				        $logoArray = explode(',', $standard->getConfigData('epaylogos'));
+				        foreach($logoArray as $item) {
+				        	switch ($item) {
+				        		case '1000': {
+				        			?><img src="<?php echo $this->getSkinUrl('images/epay/epay_logo.gif') ?>" border="0" title="ePay | Dit online Betalingssystem.dk (www.epay.dk)" />&nbsp;&nbsp;<?php
+				        			break;
+				        		} 
+				        		case '1001': {
+				        			?><img src="<?php echo $this->getSkinUrl('images/epay/verisign_secure.gif') ?>" border="0" />&nbsp;&nbsp;<?php
+				        			break;
+				        		} 
+				        		case '1002': {
+				        			?><img src="<?php echo $this->getSkinUrl('images/epay/mastercard_securecode.gif') ?>" border="0" />&nbsp;&nbsp;<?php
+				        			break;
+				        		} 
+				        		case '1003': {
+				        			?><img src="<?php echo $this->getSkinUrl('images/epay/pci.gif') ?>" border="0" />&nbsp;&nbsp;<?php
+				        			break;
+				        		} 
+				        		case '1004': {
+				        			?><img src="<?php echo $this->getSkinUrl('images/epay/pbslogo.gif') ?>" border="0" />&nbsp;&nbsp;<?php
+				        			break;
+				        		} 
+				        		case '1005': {
+				        			?><img src="<?php echo $this->getSkinUrl('images/epay/seb.jpg') ?>" border="0" />&nbsp;&nbsp;<?php
+				        			break;
+				        		}
+				        		case '1006': {
+				        			?><img src="<?php echo $this->getSkinUrl('images/epay/euroline.gif') ?>" border="0" />&nbsp;&nbsp;<?php
+				        			break;
+				        		} 
+				        	}
+				        }
+				      }
+				      
+				      if ($standard->showCardsList()) {
+				        ?>
+			        	<br><br>
+				        <?php echo $this->__('EPAY_LABEL_3') ?>
+				        <br>
+				        <?php
+				        //
+				        // Show card logos
+				        //
+				        $logoArray = explode(',', $standard->getConfigData('epaylogos'));
+				        foreach($logoArray as $item) {
+				        	switch ($item) {
+				        		case '1': {
+				        			?><img src="<?php echo $this->getSkinUrl('images/epay/dankort.gif') ?>" border="0" title="Dankort" />&nbsp;&nbsp;<?php
+				        			break;
+				        		} 
+				        		case '2': {
+				        			?><img src="<?php echo $this->getSkinUrl('images/epay/edankort.gif') ?>" border="0" title="eDankort" />&nbsp;&nbsp;<?php
+				        			break;
+				        		} 
+				        		case '3': {
+				        			?><img src="<?php echo $this->getSkinUrl('images/epay/danskenetbetaling.gif') ?>" border="0" title="Danske Bank Netbetaling" />&nbsp;&nbsp;<?php
+				        			break;
+				        		} 
+				        		case '4': {
+				        			?><img src="<?php echo $this->getSkinUrl('images/epay/nordea.gif') ?>" border="0" title="Nordea e-betaling" />&nbsp;&nbsp;<?php
+				        			break;
+				        		} 
+				        		case '5': {
+				        			?><img src="<?php echo $this->getSkinUrl('images/epay/ewire.gif') ?>" border="0" title="EWIRE" />&nbsp;&nbsp;<?php
+				        			break;
+				        		} 
+				        		case '6': {
+				        			?><img src="<?php echo $this->getSkinUrl('images/epay/forbrugsforeningen.gif') ?>" border="0" title="Forbrugsforeningen" />&nbsp;&nbsp;<?php
+				        			break;
+				        		} 
+				        		case '7': {
+				        			?><img src="<?php echo $this->getSkinUrl('images/epay/visa.gif') ?>" border="0" title="VISA" />&nbsp;&nbsp;<?php
+				        			break;
+				        		} 
+				        		case '8': {
+				        			?><img src="<?php echo $this->getSkinUrl('images/epay/visaelectron.gif') ?>" border="0" title="VISA Electron" />&nbsp;&nbsp;<?php
+				        			break;
+				        		} 
+				        		case '9': {
+				        			?><img src="<?php echo $this->getSkinUrl('images/epay/mastercard.gif') ?>" border="0" title="MasterCard" />&nbsp;&nbsp;<?php
+				        			break;
+				        		} 
+				        		case '10': {
+				        			?><img src="<?php echo $this->getSkinUrl('images/epay/maestro.gif') ?>" border="0" title="Maestro" />&nbsp;&nbsp;<?php
+				        			break;
+				        		} 
+				        		case '11': {
+				        			?><img src="<?php echo $this->getSkinUrl('images/epay/jcb.gif') ?>" border="0" title="JCB" />&nbsp;&nbsp;<?php
+				        			break;
+				        		} 
+				        		case '12': {
+				        			?><img src="<?php echo $this->getSkinUrl('images/epay/diners.gif') ?>" border="0" title="Diners Club" />&nbsp;&nbsp;<?php
+				        			break;
+				        		} 
+				        		case '13': {
+				        			?><img src="<?php echo $this->getSkinUrl('images/epay/amex.gif') ?>" border="0" title="AMEX" />&nbsp;&nbsp;<?php
+				        			break;
+				        		} 
+				        	}
+				        }
+				      }
+				      ?>
+        </li>
+    </ul>
+</fieldset>

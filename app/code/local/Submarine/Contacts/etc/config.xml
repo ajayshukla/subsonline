@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Submarine_Contacts>
+      <version>0.0.1</version>
+    </Submarine_Contacts>
+  </modules>
+  <frontend>
+    <routers>
+      <contacts>
+        <args>
+          <modules>
+            <Submarine_Contacts before="Mage_Contacts">Submarine_Contacts</Submarine_Contacts>
+          </modules>
+        </args>
+      </contacts>
+    </routers>
+  </frontend>
+</config>

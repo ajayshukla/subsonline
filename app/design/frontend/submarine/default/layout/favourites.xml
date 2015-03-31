@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2011 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+-->
+<layout version="0.1.0">
+
+<!--
+Default layout, loads most of the pages
+-->
+
+    <default>
+        <!--
+        <reference name="top.links">
+            <block type="favourites/links" name="favourites_link"/>
+            <action method="addLinkBlock"><blockName>favourites_link</blockName></action>
+        </reference>
+        -->
+
+        <!-- Mage_Favourites -->
+        <reference name="right">
+            <block type="favourites/customer_sidebar" name="favourites_sidebar" as="favourites" after="cart_sidebar" template="favourites/sidebar.phtml"/>
+        </reference>
+    </default>
+
+<!--
+Customer account pages, rendered for all tabs in dashboard
+-->
+
+    <customer_account>
+        <!-- Mage_Favourites -->
+        <reference name="customer_account_navigation">
+            <action method="addLink" translate="label" module="favourites" ifconfig="favourites/general/active"><name>favourites</name><path>favourites/</path><label>My Favourites</label></action>
+        </reference>
+    </customer_account>
+
+<!--
+Customer account home dashboard layout
+-->
+
+    <customer_account_index>
+
+        <reference name="right">
+            <action method="unsetChild"><name>favourites</name></action>
+        </reference>
+    </customer_account_index>
+
+<!--
+Favourites pages
+-->
+
+    <favourites_index_index translate="label">
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+        <label>Customer My Account My Favourites</label>
+        <!-- Mage_Favourites -->
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper">
+            <block type="favourites/customer_favourites" name="customer.favourites" template="favourites/view.phtml">
+                <block type="favourites/customer_favourites_item_options" name="customer.favourites.item.options" as="item_options"/>
+            </block>
+        </reference>
+        <reference name="right">
+            <action method="unsetChild"><name>favourites_customer_sidebar</name></action>
+        </reference>
+    </favourites_index_index>
+
+    <favourites_index_share translate="label">
+        <label>Customer My Account Favourites Sharing Form</label>
+        <!-- Mage_Favourites -->
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper">
+            <block type="favourites/customer_sharing" name="favourites.sharing" template="favourites/sharing.phtml"/>
+        </reference>
+        <reference name="right">
+            <action method="unsetChild"><name>favourites_customer_sidebar</name></action>
+        </reference>
+    </favourites_index_share>
+    
+    <favourites_index_configure translate="label">
+        <label>Configure Favourites Item</label>
+        <update handle="catalog_product_view"/>
+        <reference name="product.info">
+            <block type="favourites/item_configure" name="product.info.addto" as="addto" template="favourites/item/configure/addto.phtml"/>
+        </reference>
+        <reference name="product.info.options.wrapper.bottom">
+            <action method="unsetChild"><name>product.info.addto</name></action>
+            <action method="append"><block>product.info.addto</block></action>
+        </reference>
+    </favourites_index_configure>
+
+    <favourites_shared_index translate="label">
+        <label>Customer Shared Favourites View</label>
+        <!-- Mage_Favourites -->
+        <reference name="content">
+            <block type="favourites/share_favourites" name="customer.favourites" template="favourites/shared.phtml"/>
+        </reference>
+    </favourites_shared_index>
+</layout>

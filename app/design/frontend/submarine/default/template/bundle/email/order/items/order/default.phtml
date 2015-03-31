@@ -1,0 +1,134 @@
+<?php $_item = $this->getItem() ?>
+<?php $_order=$this->getOrder() ?>
+
+<?php $parentItem = $this->getItem() ?>
+<?php $items = array_merge(array($parentItem), $parentItem->getChildrenItems()); ?>
+
+<?php if($this->getItemOptions() || $_item->getDescription() || $this->helper('giftmessage/message')->getIsMessagesAvailable('order_item', $_item) && $_item->getGiftMessageId()): ?>
+    <?php $_showlastRow = true ?>
+<?php else: ?>
+    <?php $_showlastRow = false ?>
+<?php endif; ?>
+
+<?php $_prevOptionId = '' ?>
+
+<?php
+$optionRows = array();
+$optionRowsCounter = 0;
+$i = 0;
+$optionValue = '';
+
+// define subcategory name for bundle product 'subs' (`6"` or `1 fod`) if we have bundle product 'subs'
+try {
+    $showEndCategory = false;
+    $endCategoryName = '';
+    $bundleProduct   = Mage::getModel('catalog/product')->load($_item->getProductId());
+    if ($bundleProduct->getSKU() == 'subs') {
+        // find "size" category name: we use first simple product from the this bundle product
+        foreach ($items as $key => $_item) {
+            if ($_item->getProductType() == 'simple') {
+                /** @var Mage_Catalog_Model_Product */
+                $simpleProduct = Mage::getModel('catalog/product')->load($_item->getProductId());
+                $categoryIds   = $simpleProduct->getCategoryIds();
+                $endCategoryId = end($categoryIds);
+                if ($endCategoryId) {
+                    $endCategoryName = $this->htmlEscape(Mage::getModel('catalog/category')->load($endCategoryId)->getName());
+                    $showEndCategory = true;
+                    break;
+                }
+            }
+        }
+    }
+} catch (Exception $exc) {
+    Mage::log('Exception: ' . $e->getMessage() .  "\n". $e->getTraceAsString(), null, 'exception.caught.log');
+}
+
+foreach ($items as $_item) {
+    if (!$_item->getParentItem()) {
+        $productName = $this->htmlEscape($_item->getName());
+        $productQty  = $_item->getQtyOrdered()*1;
+        if ($this->helper('tax')->displaySalesPriceExclTax($_order->getStore()) || $this->helper('tax')->displaySalesBothPrices($_order->getStore())) {
+            if (Mage::helper('weee')->typeOfDisplay($_item, array(0, 1, 4), 'email', $_order->getStore())) {
+                $productPrice = $_order->formatPrice($_item->getRowTotal()+$_item->getWeeeTaxAppliedRowAmount()+$_item->getWeeeTaxRowDisposition());
+            } else {
+                $productPrice = $_order->formatPrice($_item->getRowTotal());
+            }
+        }
+    } else {
+        $itemName        = $this->htmlEscape($_item->getName());
+        $explodedItemSKU = explode('-', $_item->getSku());
+        if ($explodedItemSKU[0] == 'drinks') {
+            /** @var Mage_Catalog_Model_Product */
+            $itemProduct   = Mage::getModel('catalog/product')->load($_item->getProductId());
+            $categoryIds   = $itemProduct->getCategoryIds();
+            $endCategoryId = end($categoryIds);
+            // append category name for drinks
+            if ($endCategoryId) {
+                $itemName.= ' ('. $this->htmlEscape(Mage::getModel('catalog/category')->load($endCategoryId)->getName()) . ')';
+            }
+        }
+        if ($attributes = $this->getSelectionAttributes($_item)){
+            if ($_prevOptionId != $attributes['option_id']){
+                $optionRowsCounter++;
+                $optionRows[$optionRowsCounter]['optname'] = $attributes['option_label'];
+                $_prevOptionId = $attributes['option_id'];
+            }
+            $optionRows[$optionRowsCounter]['value'][] = $itemName;
+        } else {
+            $optionRows[$optionRowsCounter]['value'] = $itemName;
+        }
+    }
+}
+
+$allOptions = '';
+$allOptionsHeaders = '';
+$allOptionsCells = '';
+foreach ($optionRows as $row){
+    //$allOptions .= '<strong><em>' . $row['optname'] . ':</em></strong> ' . (is_array($row['value']) ? implode(', ', $row['value']) : $row['value']) . '; ';
+    $allOptionsHeaders .= '<td style="padding:2px; border:solid 1px #000; vertical-align:top; text-align:center;" ' . (is_array($row['value']) ? ' colspan="' . count($row['value'])  . '"' : '') . '><strong><em>' . $row['optname'] . '</em></strong></td>';
+    //$allOptions .= '<strong><em>' . $row['optname'] . ':</em></strong> ' . (is_array($row['value']) ? implode(', ', $row['value']) : $row['value']) . '; ';
+    $allOptionsCells .= '<td valign="top" style="padding:2px; border:solid 1px #000; vertical-align:top; text-align:center;">' . (is_array($row['value']) ? implode('</td><td style="padding:2px; border:solid 1px #000; vertical-align:top;">', $row['value']) : $row['value']) . '</td>';
+}
+?>
+
+<tr>
+    <td style="border:solid 1px #000; border-right:0px; padding:2px; vertical-align:top; text-align:left;">
+        <strong><em><?php
+            echo $productName;
+            echo ($showEndCategory ? '<br /><span>' . $endCategoryName . '</span>' : '');
+        ?></em></strong>
+    </td>
+    <td>
+        <table style="border-collapse:collapse; width:100%;">
+            <tr><?php echo $allOptionsHeaders; ?></tr>
+            <tr><?php echo $allOptionsCells; ?></tr>
+        </table>
+    </td>
+    <td style="border:solid 1px #000; border-left:0px; padding:2px; vertical-align:top; text-align:center;"><strong><?php echo $productQty; ?></strong></td>
+    <td style="border:solid 1px #000; border-left:0px; padding:2px; vertical-align:top; text-align:right;"><strong><?php echo $productPrice; ?></strong></td>
+</tr>
+<tr><td colspan="12" style="background-color:white;">&nbsp;</td></tr>
+
+<?php if ($_showlastRow): ?>
+<tr>
+    <td align="left" valign="top" style="padding:3px 9px">
+        <?php if ($this->getItemOptions()): ?>
+        <dl style="margin:0; padding:0;">
+            <?php foreach ($this->getItemOptions() as $option): ?>
+            <dt><strong><em><?php echo $option['label'] ?></em></strong></dt>
+            <dd style="margin:0; padding:0 0 0 9px;"><?php echo $option['value'] ?></dd>
+            <?php endforeach; ?>
+        </dl>
+        <?php endif; ?>
+        <?php if ($_item->getGiftMessageId() && $_giftMessage = $this->helper('giftmessage/message')->getGiftMessage($_item->getGiftMessageId())): ?>
+        <br /><strong><?php echo $this->__('Gift Message') ?></strong>
+        <br /><?php echo $this->__('From:'); ?> <?php echo $this->htmlEscape($_giftMessage->getSender()) ?>
+        <br /><?php echo $this->__('To:'); ?> <?php echo $this->htmlEscape($_giftMessage->getRecipient()) ?>
+        <br /><?php echo $this->__('Message:'); ?><br /> <?php echo $this->htmlEscape($_giftMessage->getMessage()) ?>
+        <?php endif; ?>
+    </td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+</tr>
+<?php endif; ?>

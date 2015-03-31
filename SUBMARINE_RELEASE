@@ -1,0 +1,100 @@
+== 0.1.0 ==
+Changes
+
+== 0.2.0 ==
+Changes
+
+== 0.3.0 ==
+Changes
+
+== 0.5.0 ==
+Changes
+SCMS-241 	Prices to be shown on product overview
+SCMS-262 	Links from Nyheder (news) page
+SCMS-102 	Ledige-jobs and link to Apply form, apply form is the same as contact us
+SCMS-230 	Welcome User menu
+SCMS-301 	Show menu type - button is missing
+SCMS-242 	link from images on product overview page
+SCMS-314 	Calendar icon is too small
+SCMS-263 	Add basket icon
+SCMS-101 	Review Specifications for Submarine CMS
+SCMS-312 	impossible to register on Checkout
+SCMS-303 	skip link from product name on category page?
+SCMS-311 	Order template should have 'Submarine' emblem
+SCMS-282 	Function of my favorite sub
+SCMS-65 	Integrate design of Registration form
+SCMS-276 	Basket/campaign on favorites
+SCMS-99 	Forgot Your Password - no mail notification about new psw
+SCMS-286 	Page counter doesn't appear for the basket
+SCMS-299 	Basket count isn't updated
+SCMS-275 	Basket/campaign on my account
+SCMS-300 	Order function from page with detailed product description
+SCMS-181 	Arrow choosing in category
+SCMS-159 	Selected category should be lighted up
+SCMS-273 	Product composition is lost if user should log in
+SCMS-207 	Checkout doesn't work for quick registration
+SCMS-161 	Align text on main page
+SCMS-45 	Adjust styles on page My Orders
+SCMS-305 	Category name in basket colomn
+SCMS-173 	If quantity of product is not enough user shouldnt have a posibility to proceed to order
+SCMS-278 	Basket/campaign on User orders page
+SCMS-201 	Breadcrumbs are missing
+SCMS-256 	Product configuration for ekstras
+SCMS-249 	Return to order from category page
+SCMS-279 	wrong link on Users orders page
+SCMS-285 	Last orders view is not userfriendly
+SCMS-289 	Drinks, layout corrupted
+SCMS-296 	'Your product orders' missing link for menu
+SCMS-217 	Checkout proceed and white background
+SCMS-187 	Order is lost if checkout is cancelled
+SCMS-251 	navigation in product configuration
+SCMS-235 	Create new sub should appear on click on Order tab
+SCMS-269 	Replace SKU with product attribute for editing and showing products
+
+== 0.5.2 ==
+Changes
+SCMS-325 [Order Subs] The amount of the order is incorrect
+SCMS-343 Wrong price for 'Chicken sub'
+SCMS-340 Pre selected product when coming from product page
+SCMS-333 Extras not mandatory & sequence under subs
+SCMS-335 Egg Special sub and one single egg
+SCMS-167 Upper menu (Kontaktinfo, Job so on) should be highlighted on selection
+SCMS-237 Delivery date is not shown in order information
+SCMS-334 Favorite filling - content missing
+SCMS-307 product descriptions
+SCMS-339 Steak & Cheese sub
+SCMS-323 Price formation for Subs, Sandwich, Menu, Salad
+SCMS-321 Chart with nutritional information doesn't escape HTML tags, so the table can be corrupted on IU
+SCMS-324 Long values for 'Chart with nutritional information' can corrupt the table.
+SCMS-329 SCMS-323 Price for drinks has extra 15 kr. in kids menu
+SCMS-302 Please provide icons for different sizes of bread
+SCMS-330 SCMS-323 Wrong price for filling 'Salat'
+SCMS-328 SCMS-323 Wrong price for double chees in kids menu (Ham & Cheese)
+SCMS-326 SCMS-323 Menu. Adding Drinks doesn't effect the price
+SCMS-318 Add caching for category pages and sidebar cart
+SCMS-331 "En Submarine original indeholder" table is corrupted
+SCMS-327 SCMS-323 Wrong price for 'Kids Menu' on 'Composition' page
+SCMS-304 related/similar products for all product types
+SCMS-238 Link from campaign banners
+SCMS-232 Provide descriptions registering sertificate
+SCMS-310 About price formation
+SCMS-171 What Social Networks should we support?
+SCMS-231 Provide recommendations for hosting requirements
+SCMS-298 Safari, Chrome, Selection is a bit short
+SCMS-222 Optimization Configure Page
+SCMS-288 Product composition, two types selected
+SCMS-295 Favorite, filling is not saved
+SCMS-316 IE, Kontakt page, notification disappears
+SCMS-283 SCMS-256 Change the look of products in the basket (last orders, etc.)
+SCMS-262 Links from Nyheder (news) page
+SCMS-230 Welcome User menu
+SCMS-284 Saved Filling cannot be selected
+SCMS-186 Checkout:Date field without validation
+SCMS-254 Product configuration for sandwiches
+SCMS-292 Price should be dependent of sub size
+SCMS-281 Text missing
+SCMS-315 Print order, Fatal error
+SCMS-135 Payment sysems icons are lost in busket section
+SCMS-258 "Are you sure" box missing
+SCMS-257 Page "Create new sub" is missing
+SCMS-102 Ledige-jobs and link to Apply form, apply form is the same as contact us

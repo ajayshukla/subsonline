@@ -1,0 +1,21 @@
+<div id="main_checkout">
+    <div class="title white"><?php echo $this->__('Checkout') ?></div>
+    <div class="content order">
+        <div class="thanks"><?php echo $this->__('Thanks for you for your order!') ?></div>
+        <div align="center"><?php echo $this->__('Maecenas sed diam eget risus varius blandit sit amet non magna.') ?></div>
+        <div align="center"><?php echo $this->__('Morbi leo risus, porta ac consectetur') ?></div>
+        <?php if ($this->getOrderId()):?>
+        <div align="center">
+        <?php if ($this->getCanViewOrder()) :?>
+            <?php echo $this->__('Your order number is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getViewOrderUrl()), $this->escapeHtml($this->getOrderId()))) ?>
+            <?php if ($this->getCanPrintOrder()) :?>
+                <?php echo $this->__('Click <a href="%s" onclick="this.target=\'_blank\'">here to print</a> a copy of your order confirmation.', $this->getPrintUrl()) ?>
+                <?php echo $this->getChildHtml() ?>
+            <?php endif;?>
+        <?php  else :?>
+            <?php echo $this->__('Your order # is: %s.', $this->escapeHtml($this->getOrderId())) ?>
+        <?php endif;?>
+        </div>
+        <?php endif;?>
+    </div>
+</div>

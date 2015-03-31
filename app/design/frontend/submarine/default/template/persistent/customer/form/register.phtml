@@ -1,0 +1,173 @@
+<?php
+	/*
+	$attribute['firstname'] = Mage::getModel('eav/config')->getAttribute('customer','firstname');
+	$attribute['address'] = Mage::getModel('eav/config')->getAttribute('customer','address');
+	$attribute['zip'] = Mage::getModel('eav/config')->getAttribute('customer','zip');
+	$attribute['city'] = Mage::getModel('eav/config')->getAttribute('customer','city');
+	$attribute['mphone'] = Mage::getModel('eav/config')->getAttribute('customer','mphone');
+	$attribute['email'] = Mage::getModel('eav/config')->getAttribute('customer','email');
+	$attribute['password'] = Mage::getModel('eav/config')->getAttribute('customer','password');
+	<?php if($attribute['firstname']->getIsRequired() == true){?><?php } ?>
+	*/
+?>
+<div class="title register"><?php echo $this->__('Register as new customer') ?></div>
+<div class="content register">
+	<?php if($this->getMessagesBlock()->getGroupedHtml()): ?><div class="title" id="msgRegister" style="opacity:0;"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+		<script>
+		window.onload = function(){
+			new Effect.Appear($('msgRegister'), {duration:1, from:0, to:1});
+		}
+		</script>
+		<?php else: ?><br><?php endif;?>
+	<form action="<?php echo $this->getPostActionUrl() ?>" method="post" id="form_register_validate">
+	<input type="hidden" name="success_url" value="<?php echo $this->getSuccessUrl() ?>" />
+	<input type="hidden" name="error_url" value="<?php echo $this->getErrorUrl() ?>" />
+	<input type="hidden" name="create_address" value="1" />
+	<input type="hidden" name="default_billing" value="1" />
+    <input type="hidden" name="default_shipping" value="1" />
+    <input type="hidden" name="country_id" value="DK" />
+	<div class="fieldset">
+		<ul class="form-list">
+		<li class="fields">
+		<div class="field">
+			<label for="company"><?php echo $this->__('Company name') ?></label>
+			<div class="input-box">
+				<input type="text" name="company" id="company" title="" class="rblock" value="<?php echo $this->getFormData()->getCompany() ?>" />
+			</div>
+		</div>
+		</li>
+		<li class="fields">
+		<div class="field">
+			<label for="cvr"><?php echo $this->__('CVR') ?></label>
+			<div class="input-box">
+				<input type="text" name="cvr" id="cvr" class="rblock" value="<?php echo $this->getFormData()->getCvr() ?>" />
+			</div>
+		</div>
+		</li>
+		<li class="fields">
+			<div class="field">
+			<label for="firstname"><?php echo $this->__('Name') ?></label>
+			<div class="input-box">
+				<input type="text" name="firstname" id="firstname" title="" class="rblock required-entry" value="<?php echo $this->getFormData()->getFirstname() ?>" />
+			</div>
+			<em>*</em>
+		</div>
+		</li>
+		<li class="fields">
+		<div class="field">
+			<label for="address"><?php echo $this->__('Address') ?></label>
+			<div class="input-box">
+				<input type="text" name="street[]" id="address" class="rblock required-entry" value="<?php echo $this->getFormData()->getStreet(0) ?>" />
+			</div>
+			<em>*</em>
+		</div>
+		</li>
+		<li class="fields">
+		<div class="field">
+			<label for="zip"><?php echo $this->__('Zip.nr.') ?></label>
+			<div class="input-box">
+				<input type="text" name="postcode" id="zip" class="zip required-entry validate-alphanum" value="<?php echo $this->htmlEscape($this->getFormData()->getPostcode()) ?>" />
+			</div>
+			<em>*</em>
+		</div>
+		</li>
+		<li class="fields">
+		<div class="field">
+			<label for="city"><?php echo $this->__('City') ?></label>
+			<div class="input-box">
+				<input type="text" name="city" id="city" class="city required-entry" value="<?php echo $this->getFormData()->getCity() ?>" />
+			</div>
+			<em>*</em>
+		</div>
+		</li>
+		<li class="fields">
+		<div class="field">
+			<label for="mphone"><?php echo $this->__('Mobile phone') ?></label>
+<script type="text/javascript">
+    Translator.add(
+        'Please, indicate your 8-digit mobile phone number, so we can send you a final confirmation of your order by SMS.',
+        '<?php echo $this->__('Please, indicate your 8-digit mobile phone number, so we can send you a final confirmation of your order by SMS.')?>'
+    );
+    Translator.add(
+        'Please make sure your email address match.',
+        '<?php echo $this->__('Please make sure your email address match.')?>'
+    );
+</script>
+			<div class="input-box">
+				<input type="text" name="telephone" id="mphone" class="rblock required-entry validate-mobilephone8" maxlength="8" value="<?php echo $this->getFormData()->getTelephone() ?>" />
+			</div>
+			<em>*</em>
+            <div style="float:left;margin-left:20px;width:450px;font-size:85%;"><?php echo Mage::helper('productview')->__('Please, indicate your 8-digit mobile phone number, so we can send you a final confirmation of your order by SMS.') ?></div>
+		</div>
+		</li>
+		<li class="fields">
+		<div class="field">
+			<label for="email_address"><?php echo $this->__('Email Address') ?></label>
+			<div class="input-box">
+				<input type="text" name="email" id="email_address" title="" class="rblock email validate-email required-entry" value="<?php echo $this->getFormData()->getEmail() ?>" />
+			</div>
+			<em>*</em>
+		</div>
+		</li>
+		<li class="fields" style="float:left;">
+		<div class="field">
+			<label for="email_address_confirm" style="text-align:right;text-indent:20px;"><?php echo $this->__('Repeat email') ?></label>
+			<div class="input-box">
+				<input type="text" name="email_confirm" id="email_address_confirm" title="" class="rblock email validate-email-confirm required-entry" value="<?php echo $this->getFormData()->getEmailConfirm() ?>" />
+			</div>
+			<em>*</em>
+		</div>
+		</li>
+		<li class="fields">
+		<div class="field">
+			<label for="password"><?php echo $this->__('Password') ?></label>
+			<div class="input-box">
+				<input id="password" class="rblock validate-password required-entry" type="password" title="Password" name="password">
+			</div>
+			<em>*</em>
+		</div>
+		</li>
+		<li class="fields" style="float:left;">
+		<div class="field">
+			<label for="confirmation" style="text-align:left;text-indent:20px;"><?php echo $this->__('Repeat password') ?></label>
+			<div class="input-box">
+				<input id="confirmation" class="rblock validate-cpassword required-entry" type="password" title="Confirm Password" name="confirmation">
+			</div>
+			<em>*</em>
+		</div>
+		</li>
+		</ul>
+	</div>
+	<div class="notice"><span class="red">*</span> <?php echo $this->__('Mandatory Fields.') ?>
+	</div>
+	<div class="reg_submit">
+		<button type="submit" class="big_button"><span><?php echo $this->__('Submit') ?></span></button>
+		<span id="form_register_validate_ajax" class="ajax-loader" style="display:none;margin-left:10px;"></span>
+	</div>
+
+	</form>
+<script type="text/javascript">
+	//<![CDATA[
+		FormRegisterValidate = Class.create();
+		FormRegisterValidate.prototype = new VarienForm();
+		FormRegisterValidate.prototype.submit = function(e) {
+			if(this.validator && this.validator.validate()) {
+				$(this.form.id + '_ajax').show();
+				//setTimeout(function(){$(this.form.id + '_ajax').hide();}, 60000);
+			}
+			//Event.stop(e);
+			return true;
+		};
+		FormRegisterValidate.prototype.initialize = (function(superConstructor) {
+		return function(formId, firstFieldFocus) {
+				superConstructor.call(this, formId, firstFieldFocus);
+				if (this.form) {
+					this.form.observe('submit', this.submit.bindAsEventListener(this));
+				}
+			};
+		})(VarienForm.prototype.initialize);
+		var form_register_validate = new FormRegisterValidate('form_register_validate', true);
+	//]]>
+</script>
+
+</div>

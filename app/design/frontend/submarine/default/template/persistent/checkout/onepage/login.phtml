@@ -1,0 +1,76 @@
+<?php
+/**
+ * Customer onepage checkout login form template
+ *
+ * @see app/design/frontend/base/default/template/checkout/onepage/login.phtml
+ */
+/** @var $this Mage_Checkout_Block_Onepage_Login */
+?>
+<?php echo $this->getChildHtml('login_before')?>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<h3 style="margin:20px 35px 5px 45px;"><?php echo $this->__('Er du ny kunde?') ?></h3>
+<div style="margin-left:45px; margin-top:20px;">
+    <ul class="form-list">
+        <li class="control">
+            <input type="radio" name="checkout_method" id="login:guest" value="guest"<?php if($this->getQuote()->getCheckoutMethod()==Mage_Checkout_Model_Type_Onepage::METHOD_GUEST): ?> checked="checked"<?php endif; ?> class="radio" /><label for="login:guest"><?php echo $this->__('Checkout as Guest') ?></label>
+        </li>
+        <li class="control">
+            <input type="radio" name="checkout_method" id="login:register" value="register"<?php if($this->getQuote()->getCheckoutMethod()==Mage_Checkout_Model_Type_Onepage::METHOD_REGISTER || !$this->getQuote()->isAllowedGuestCheckout()): ?> checked="checked"<?php endif ?> class="radio" /><label for="login:register"><?php echo $this->__('Register') ?></label>
+        </li>
+    </ul>
+</div>
+<div style="margin:0px 145px;">
+    <form action="<?php echo $this->getUrl('persistent/index/saveMethod'); ?>">
+        <span style="display: block;"><?php echo Mage::helper('productview')->__('New Customer? Please register and continue checkout'); ?></span>
+        <button id="onepage-guest-register-button" type="button" class="big_button" onclick="checkout.setMethod();"><span><span><?php echo $this->__('Continue') ?></span></span></button>
+    </form>
+</div>
+
+<form id="login-form" action="<?php echo $this->getPostAction() ?>" method="post">
+    <fieldset style="border:none; margin-left:15px;">
+        <h3 style="margin:20px 35px 5px 35px;"><?php echo $this->__('Already registered?') ?> <?php echo $this->__('Please log in below:') ?></h3>
+        <div class="lblock"><?php echo $this->__('Email Address') ?></div>
+        <div class="field"><div class="input-box"><input style="float:left" type="text" class="rblock input-text required-entry validate-email" id="login-email" name="login[username]" value="<?php echo $this->htmlEscape($this->getUsername()) ?>" /></div><em>*</em></div>
+        <div class="lblock"><?php echo $this->__('Password') ?></div>
+        <div class="field"><div class="input-box"><input type="password" class="rblock input-text required-entry" id="login-password" name="login[password]" /></div><em>*</em></div>
+    </fieldset>
+</form>
+
+<div style="margin:0px 145px;">
+    <button type="submit" class="big_button" onclick="onepageLogin(this)"><span><span><?php echo $this->__('Login') ?></span></span></button>
+</div>
+
+<script type="text/javascript">
+    //<![CDATA[
+    var loginForm = new VarienForm('login-form', true);
+    $('login-email').observe('keypress', bindLoginPost);
+    $('login-password').observe('keypress', bindLoginPost);
+    function bindLoginPost(evt){
+        if (evt.keyCode == Event.KEY_RETURN) {
+            loginForm.submit();
+        }
+    }
+    function onepageLogin(button)
+    {
+        if(loginForm.validator && loginForm.validator.validate()){
+            button.disabled = true;
+            loginForm.submit();
+        }
+    }
+    //]]>
+</script>
+<?php
+$registerParam = $this->getRequest()->getParam('register');
+if ($registerParam || $registerParam === ''):
+    ?>
+<script type="text/javascript">
+    //<![CDATA[
+    document.observe("dom:loaded", function() {
+        if($('login:register')) {
+            $('login:register').checked = true;
+            checkout.setMethod();
+        }
+    })
+    //]]>
+</script>
+<?php endif; ?>

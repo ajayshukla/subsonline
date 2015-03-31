@@ -1,0 +1,25 @@
+<?php $_maincategorylisting=$this->getCurrentCategory()?>
+<?php $_categories=$this->getCurrentChildCategories()?>
+<div class="subcat-listing">
+    <ul class="subcat-products">
+        <?php $rowCount = 0;
+        foreach ($_categories as $_category) {
+            if($_category->getIsActive()){
+                $cur_category=Mage::getModel('catalog/category')->load($_category->getId());
+                $layer = Mage::getSingleton('catalog/layer');
+                $layer->setCurrentCategory($cur_category);
+                $rowCount++;
+                $liClass = (($rowCount == 4 || $rowCount == 8) ? ' class="last"' : '');
+                $imageUrl = $this->getCurrentCategory()->getImageUrl();
+                $imageUrl = $imageUrl ? $imageUrl : '/skin/frontend/base/default/images/catalog/product/placeholder/image.jpg';
+                ?>
+        <li<?php echo $liClass; ?> style="width: 168px">
+                    <a href="<?php echo $this->getCategoryUrl($_category) ?>" title="<?php echo $this->htmlEscape($_category->getName()) ?>" title="<?php echo $this->htmlEscape($_category->getName()) ?>">
+                        <img src="<?php echo $imageUrl; ?>" width="168" alt="<?php echo $this->htmlEscape($_category->getName()) ?>">
+                    </a>
+                    <h3 align="center"><?php echo $this->htmlEscape($_category->getName()) ?></h3>
+                </li>
+                <?php } ?>
+            <?php } ?>
+    </ul>
+</div>

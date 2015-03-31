@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <layout>
+        <default>
+       
+            <!--<remove name="right.poll"/>
+            <remove name="right.permanent.callout"/>
+            <remove name="left.permanent.callout"/>
+            <remove name="paypal.partner.right.logo"/>
+			-->
+
+            <reference name="head">
+                <action method="addCss"><stylesheet>css/Refresh.css</stylesheet>
+                </action>
+            </reference>
+        </default>
+</layout>

@@ -1,0 +1,105 @@
+<?php
+    $_productCollection=$this->getLoadedProductCollection();
+    $_helper = $this->helper('catalog/output');
+?>
+
+<div class="content">
+<?php if(!$_productCollection->count()): ?>
+<p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>
+<?php else: ?>
+    <?php $_collectionSize = $_productCollection->count() ?>
+    <?php $_columnCount = $this->getColumnCount(); ?>
+    <?php $i=0; foreach ($_productCollection as $_product): ?>
+        <?php if ($i++%$_columnCount==0): ?>
+        <ul class="products-grid">
+        <?php endif ?>
+            <li class="item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
+                <div class="product-image"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(120); ?>" width="120" height="120" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /></a></div>
+                <h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></a></h2>
+                <?php if($_product->getRatingSummary()): ?>
+                <?php echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+                <?php endif; ?>
+                <div class="bottom_info">
+                <div class="small_descr">
+                    <p><?php echo $_product->getShortDescription(); ?></p>
+                     <a href="<?php echo $_product->getProductUrl() ?>">More details</a>
+                </div>
+                <?php echo $this->getPriceHtml($_product, true) ?>
+                    <div align="center" class="actions">
+                        <?php if($_product->isSaleable()): ?>
+                        
+                        <?php
+                            $aDrinks = explode('-', $_product->getSKU());
+                            if ($aDrinks[0] == 'drinks') : ?>
+                                <button type="button" title="<?php echo $this->__('Order') ?>" class="button btn-cart" onclick="setLocationAjax('<?php echo $this->getAddToCartUrl($_product) ?>','<?php echo $_product->getId()?>')"><span><span><?php echo $this->__('Order') ?></span></span></button>
+                                <span id='ajax_loader<?php echo $_product->getId()?>' style='display:none'><img src='<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif')?>'/></span>
+                            <?php else: ?>
+                                <button type="button" title="<?php echo $this->__('Order') ?>" class="button btn-cart" onclick="showOptions('<?php echo $_product->getId()?>')"><span><span><?php echo $this->__('Order') ?></span></span></button>
+                                <a href='<?php echo $this->getUrl('ajax/checkout_cart/options',array('product_id'=>$_product->getId()));?>' class='fancybox' id='fancybox<?php echo $_product->getId()?>' style='display:none'></a>
+                            <?php endif; ?>
+                            <?php ?>
+                                
+                        <?php else: ?>
+                            <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </li>
+        <?php if ($i%$_columnCount==0 || $i==$_collectionSize): ?>
+        </ul>
+        <?php endif ?>
+        <?php endforeach ?>
+        <script type="text/javascript">decorateGeneric($$('ul.products-grid'), ['odd','even','first','last'])</script>
+<?php endif; ?>
+</div>
+<script type="text/javascript">
+	jQuery(document).ready(function(){
+		jQuery('.fancybox').fancybox(
+			{
+			   hideOnContentClick : true,
+			   width: 710,
+                           //height: 430,
+			   autoDimensions: true,
+               type : 'iframe',
+			   showTitle: false,
+			   scrolling: 'no',
+			   onComplete: function(){
+				jQuery('#fancybox-frame').load(function() { // wait for frame to load and then gets it's height
+					jQuery('#fancybox-content').height(jQuery(this).contents().find('body').height()+30);
+					jQuery.fancybox.resize();
+				 });
+
+			   }
+			}
+		);
+	});
+	function showOptions(id){
+		jQuery('#fancybox'+id).trigger('click');
+	}
+	function setAjaxData(data,iframe){
+		if(data.status == 'ERROR'){
+			alert(data.message);
+		}else{
+                    if(jQuery('#sidebar')){
+                        jQuery('#sidebar').html(data.sidebar);
+                    }
+                    jQuery.fancybox.close();
+		}
+	}
+	function setLocationAjax(url,id){
+		url += 'isAjax/1';
+		url = url.replace("checkout/cart","ajax/checkout_cart");
+		jQuery('#ajax_loader'+id).show();
+		try {
+			jQuery.ajax( {
+				url : url,
+				dataType : 'json',
+				success : function(data) {
+					jQuery('#ajax_loader'+id).hide();
+         			setAjaxData(data,false);           
+				}
+			});
+		} catch (e) {
+		}
+	}
+</script>

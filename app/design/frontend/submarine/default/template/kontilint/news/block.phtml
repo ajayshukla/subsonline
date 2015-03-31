@@ -1,0 +1,52 @@
+<div class="news_cr">
+<h3><?php echo ($this->getBlockTitle()) ? $this->__($this->getBlockTitle()) : $this->__("FLERE NYHEDER"); ?></h3>
+<?php $collection = $this->getItems(4, $this->getCategory()); ?>
+
+<?php if ( count($collection) == 0 ) : ?>
+
+ <p><?php echo $this->__('No news yet...'); ?></p>
+
+<?php else : ?>
+<ul>
+ <?php foreach ( $collection as $_item ) : ?>
+      <li>
+      <a href="<?php echo Mage::helper('knews')->getUrl($_item['identifier']); ?>"><?php echo $_item['title']; ?></a>
+      </li>
+
+ <?php endforeach; ?>
+</ul>
+<?php endif; ?>
+</div>
+
+
+<?php
+if (false) {
+?>
+<?php $collection = $this->getItems(3); ?>
+
+<?php if ( count($collection) == 0 ) : ?>
+
+	<p><?php echo $this->__('No news yet...'); ?></p>
+
+<?php else : ?>
+
+	<?php foreach ( $collection as $_item ) : ?>
+     <div style="float: left;">
+              <?php echo Mage::helper('knews')->getImage($_item['image'], 200, 200); ?>
+      </div>
+      <div style="float: left;">
+      <a href="<?php echo Mage::helper('knews')->getUrl($_item['identifier']); ?>"><?php echo $_item['title']; ?></a><br />
+      <?php echo $_item['date']; ?><br />
+<?php echo $_item['short_description']; ?><br />
+      <a href="<?php echo Mage::helper('knews')->getUrl($_item['identifier']); ?>"><?php echo $this->__('Learn more...'); ?></a>
+      </div>
+      <div style="clear: both;"></div>
+
+
+	<?php endforeach; ?>
+
+<?php endif; ?>
+<?php
+}
+?>
+
