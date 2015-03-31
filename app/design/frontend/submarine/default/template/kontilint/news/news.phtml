@@ -1,0 +1,90 @@
+<div class="title white"><?php echo Mage::helper('knews')->getListPageTitle(); ?></div>
+
+<div class="std">
+
+<?php $collection = $this->getItems(); ?>
+
+<?php if ( count($collection) == 0 ) : ?>
+
+	<p><?php echo $this->__('No news yet...'); ?></p>
+
+<?php else : ?>
+
+	<?php if ( Mage::helper('knews')->isAllowRss() ) : ?>
+	<p>
+		<a href="<?php echo Mage::helper('knews')->getUrl('rss') . '?id=' . Mage::app()->getStore()->getId(); ?>"><?php echo $this->__('RSS Feed'); ?></a>
+	</p>
+	<?php endif; ?>
+
+	<?php foreach ( $collection as $_item ) : ?>
+		<div style="float: left; width: 135px;">
+			<?php echo Mage::helper('knews')->getImage($_item['image']); ?>
+		</div>
+		<div style="float: left;">
+      <h2><?php echo $_item['title']; ?></h2>
+      <p><?php echo $_item['date']; ?></p>
+      <p><?php echo $_item['short_description']; ?><br />
+        <a href="<?php echo Mage::helper('knews')->getUrl($_item['identifier']); ?>"><?php echo $this->__('Learn more...'); ?></a>
+      </p>
+		</div>
+		<div style="clear: both;"></div>
+    <br>
+	<?php endforeach; ?>
+	
+
+	<?php /* Pagination control */ ?>
+	<?php if ( $collection instanceof Zend_Paginator ) : ?>
+		<?php echo $this->getChildHtml('pagination'); ?>
+	<?php endif; ?>
+	<?php echo $this->getChildHtml('toolbar'); ?>
+<?php endif; ?>
+
+</div>
+
+
+<?php
+if (false) {
+// original code
+?>
+<h1><?php echo Mage::helper('knews')->getListPageTitle(); ?></h1>
+
+<?php $collection = $this->getItems(); ?>
+
+<?php if ( count($collection) == 0 ) : ?>
+
+	<p><?php echo $this->__('No news yet...'); ?></p>
+
+<?php else : ?>
+
+	<?php if ( Mage::helper('knews')->isAllowRss() ) : ?>
+	<p>
+		<a href="<?php echo Mage::helper('knews')->getUrl('rss') . '?id=' . Mage::app()->getStore()->getId(); ?>"><?php echo $this->__('RSS Feed'); ?></a>
+	</p>
+	<?php endif; ?>
+
+	<?php foreach ( $collection as $_item ) : ?>
+		<div style="float: left; width: 135px;">
+			<?php echo Mage::helper('knews')->getImage($_item['image']); ?>
+		</div>
+		<div style="float: left;">
+		<a href="<?php echo Mage::helper('knews')->getUrl($_item['identifier']); ?>"><?php echo $_item['title']; ?></a><br />
+		<?php echo $_item['date']; ?><br />
+<?php echo $_item['short_description']; ?><br />
+		<a href="<?php echo Mage::helper('knews')->getUrl($_item['identifier']); ?>"><?php echo $this->__('Learn more...'); ?></a>
+		</div>
+		<div style="clear: both;"></div>
+	<?php endforeach; ?>
+	
+
+	<?php /* Pagination control */ ?>
+	<?php if ( $collection instanceof Zend_Paginator ) : ?>
+		<?php echo $this->getChildHtml('pagination'); ?>
+	<?php endif; ?>
+	<?php echo $this->getChildHtml('toolbar'); ?>
+	
+
+<?php endif; ?>
+<?php
+}
+?>
+

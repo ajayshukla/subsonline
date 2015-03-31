@@ -1,0 +1,138 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2011 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Shopping cart template
+ *
+ * @see Mage_Checkout_Block_Cart
+ */
+?>
+
+<div class="cart">
+  <div class="title white"><span class="basket"><?php echo $this->__("Basket") ?></span></div>
+    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+    <?php echo $this->getChildHtml('form_before') ?>
+  <form action="<?php echo $this->getUrl('checkout/cart/updatePost') ?>" method="post">
+  <div class="content">
+    <?php
+    // product categories in the basket
+    try {
+		$cartCategories = array();
+		foreach($this->getItems() as $_item) {
+			$categoryIds = $_item->getProduct()->getCategoryIds();
+			if (!is_array($categoryIds)) $categoryIds = array();
+			if ($_item->getProduct()->getTypeId() == 'simple') {
+				$productSimpleSKU = explode("-", $_item->getProduct()->getSku());
+				if ($productSimpleSKU[0] == "drinks") {
+					$categoryId = Mage::getModel("catalog/category")->load(end($categoryIds))->getParentId();
+					$cartCategories[$categoryId]['items'][] = $_item->getId();
+					$cartCategories[$categoryId]['qty'][] = $_item->getQty();
+				} else {
+					$categoryId = end($categoryIds);
+					$cartCategories[$categoryId]['items'][] = $_item->getId();
+					$cartCategories[$categoryId]['qty'][] = $_item->getQty();
+				}
+			} else {
+				$categoryId = end($categoryIds);
+				$cartCategories[$categoryId]['items'][] = $_item->getId();
+				$cartCategories[$categoryId]['qty'][] = $_item->getQty();
+			}
+		}
+	} catch (Exception $e) {
+		Mage::log($e->getMessage(), null, 'exception.log');
+	}
+    
+    // serial number of a product in the basket shown on the basket page 
+    global $prodNo;
+    $prodNo = 1;
+    
+    foreach ($cartCategories as $catId => $categoryItems) {
+      $category =  Mage::getModel("catalog/category")->load($catId);
+      // category total quantity
+      $catTotal = 0;
+      foreach ($categoryItems['qty'] as $key => $qty) {
+        $catTotal += intval($qty); 
+      }
+    ?>
+    <div class="position_title"><?php echo $category->getName(); ?> <span class="total"><?php echo $this->__("TOTAL ") . $catTotal ?></span></div>
+    <?php  
+      foreach ($categoryItems['items'] as $key => $itemId) {
+        foreach($this->getItems() as $_item) {
+          if ($_item->getId() == $itemId) {
+            echo $this->getItemHtml($_item);
+            $prodNo++;
+          }
+        }
+      }
+    } 
+    ?>
+  
+  </div>
+    
+  <div class="acc_buttons" style="margin: 0px 0px 5px 0px">
+  <?php if($this->getContinueShoppingUrl()): ?>
+    <button type="button" title="<?php echo $this->__('Continue Shopping') ?>" class="big_button left" onclick="setLocation('<?php echo $this->getContinueShoppingUrl() ?>'); return false;"><span><?php echo $this->__('Continue Shopping') ?></span></button>
+  <?php endif; ?>
+	<button type="submit" title="<?php echo $this->__('Update Shopping Cart') ?>" class="big_button right"><span><?php echo $this->__('Update Shopping Cart') ?></span></button>
+  </div>
+  </form>
+    
+  <div class="order_total">
+    <div class="total_price"><?php echo $this->getChildHtml('totals'); ?></div>
+    <div class="checkouts">
+      <?php if(!$this->hasError()): ?>
+      <ul class="checkout-types">
+      <?php foreach ($this->getMethods('methods') as $method): ?>
+          <?php if ($methodHtml = $this->getMethodHtml($method)): ?>
+          <li><?php echo $methodHtml; ?></li>
+          <?php endif; ?>
+      <?php endforeach; ?>
+      </ul>
+      <?php endif; ?>
+    </div>
+  </div>
+  
+  
+<?php
+if (false) {
+?>
+  <div class="cart-collaterals">
+    <div class="col2-set">
+      <div class="col-1">
+          <?php echo $this->getChildHtml('crosssell') ?>
+      </div>
+      <div class="col-2">
+          <?php echo $this->getChildHtml('coupon') ?>
+          <?php if (!$this->getIsVirtual()): echo $this->getChildHtml('shipping'); endif; ?>
+      </div>
+    </div>
+  </div>
+<?php
+}
+?>  
+</div>
+

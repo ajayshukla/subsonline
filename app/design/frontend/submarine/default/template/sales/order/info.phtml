@@ -1,0 +1,37 @@
+<?php  $_order = $this->getOrder() ?>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<div class="page-title">
+    <div class="title">
+        <?php echo $this->__('Order #: %s', $_order->getRealOrderId()) ?>;
+        <?php echo $this->__('Status: %s', $_order->getStatusLabel()) ?>;
+        <?php echo $this->__('Date: %s', $this->formatDate($_order->getCreatedAtStoreDate(), 'long')) ?>
+    </div>
+</div>
+<div class="content orderview" style="margin-left:15px; padding-bottom:0px !important;">
+<div class="title-buttons">
+    <?php echo $this->getChildHtml('buttons') ?>
+</div>
+<?php echo $this->getStatusHistoryRssUrl($_order) ?>
+<div class="col2-set order-info-box">
+    <div class="col-1">
+        <div class="box">
+            <div class="box-title">
+                <div class="title"><?php echo $this->__('Address') ?></div>
+            </div>
+            <div class="box-content">
+                <address><?php echo $_order->getBillingAddress()->format('html') ?></address>
+            </div>
+        </div>
+    </div>
+    <div class="col-2">
+        <div class="box box-payment">
+            <div class="box-title">
+                <div class="title"><?php echo $this->__('Payment Method') ?></div>
+            </div>
+            <div class="box-content">
+                <?php echo $this->getPaymentInfoHtml() ?>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

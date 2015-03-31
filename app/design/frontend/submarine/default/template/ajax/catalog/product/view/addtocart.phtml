@@ -1,0 +1,14 @@
+<?php $_product = $this->getProduct(); ?>
+<?php $buttonTitle = $this->__('Checkout'); ?>
+<?php if($_product->isSaleable()): ?>
+<div class="qty">
+        <?php if(!$_product->isGrouped()): ?>
+        <span class="amount"><label for="qty"><?php echo $this->__('AMOUNT') ?></label>
+            <input type="text" name="qty" id="qty" maxlength="12" value="<?php echo $this->getProductDefaultQty() * 1 ?>" title="<?php echo $this->__('Qty') ?>" class="input-text qty" />
+            <span id='ajax_loader' style='display:none'><img src='<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif')?>'/></span>
+        </span>
+        <?php endif; ?>
+        <button type="button" class="button btn-cart" title="<?php echo $buttonTitle ?>" onclick="productAddToCartForm.submit(this)"><span><?php echo $buttonTitle ?></span></button>
+        <?php echo $this->getChildHtml('', true, true) ?>
+    </div>
+<?php endif; ?>

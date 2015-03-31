@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Submarine_ProductView>
+      <active>true</active>
+      <codePool>local</codePool>
+    </Submarine_ProductView>
+  </modules>
+</config>

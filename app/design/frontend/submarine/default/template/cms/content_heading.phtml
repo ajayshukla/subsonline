@@ -1,0 +1,49 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2011 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+
+<?php if($_heading = $this->getContentHeading()): ?>
+	<div class="title white">
+		<?php if (!stristr($this->getLayout()->getBlock('root')->getTemplate(), "empty.phtml")) { ?>
+		<script type="text/javascript">var switchTo5x=true;</script>
+		<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+		<script type="text/javascript">stLight.options({publisher: "ur-fd113938-e19c-54eb-3926-87dbb8182baa"}); </script>
+        <span class="social_links">
+            <?php /*
+            <span class="st_sharethis" title="ShareThis"></span>
+            <span class="st_linkedin" title="LinkedIn"></span>
+            <span class="st_email" title="Email"></span>
+            <span class="st_googleplus" title="Google +1"></span>
+            <span class="st_google_bmarks" title="Bookmarks"></span>
+			 * 
+			 */?>
+			<span class="st_facebook" title="Facebook"></span>
+            <span class="st_twitter" title="Tweet"></span>
+        </span>
+		<?php } ?>
+		<?php echo $_heading; ?>
+    </div>
+<?php endif; ?>

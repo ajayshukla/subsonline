@@ -1,0 +1,91 @@
+<?php
+$_item = $this->getItem();
+$itemProduct = Mage::getModel('catalog/product')->load($_item->getProductId());
+$canApplyMsrp = Mage::helper('catalog')->canApplyMsrp($_item->getProduct(), Mage_Catalog_Model_Product_Attribute_Source_Msrp_Type::TYPE_BEFORE_ORDER_CONFIRM);
+$showDrink = $showTypeMenus = $showTypeExtras =false;
+$product = Mage::getModel('catalog/product')->load($_item->getProductId());
+try {
+    if ($product->getTypeId() == 'simple') {
+        $productSimpleSKU = explode("-", $product->getSku());
+        if ($productSimpleSKU[0] == "drinks") {
+            $categoryIds = $product->getCategoryIds();
+            if (is_array($categoryIds)) $categoryIdEnd = end($categoryIds);
+            else $categoryIdEnd = null;
+            $showDrink = true;
+		} else {
+			$aProductBundleSKU = explode("-", $product->getSku());
+			if ($aProductBundleSKU[0] == 'extras') $showTypeExtras = true;
+		}
+	}
+
+} catch (Exception $e) {
+    Mage::log($e->getMessage());
+}
+
+// serial number of a product in the basket shown on the basket page (see cart.phtml)
+global $prodNo;
+?>
+<div class="order_view">
+    <div class="ll"><?php echo $prodNo ?></div>
+    <div class="lc">
+        <?php
+		if ($showTypeExtras) {
+			?>
+			<span class="fill"><?php echo Mage::helper("productview")->__('Type of Extras') ?></span>:&nbsp;
+			<span class="chosen"><?php echo $this->htmlEscape($product->getName()) ?></span>
+			<?php
+			$showTypeExtras = false;
+		}
+        ?>
+        <?php $_options = $this->getOptionList(); ?>
+        <?php if ($_options) { ?>
+        <?php foreach ($_options as $_option) : ?>
+            <span class="fill"><?php echo $this->htmlEscape($_option['label']) ?></span>:&nbsp;<?php if (is_array($_option['value'])) :
+                $_aOptionName = array();
+                $showSizeSubs = false;
+                $i = 0;
+                foreach ($_option['value'] as $val) :
+                    $i++;
+                    $_aOptionName[$i] = $val['name'];
+                    $valSKUs = explode("-", $val['sku']);
+                    if ($productBundleSKU == 'subs' && $valSKUs[0] == 'subs') $showSizeSubs = true;
+                    elseif ($valSKUs[0] == 'drinks') {
+                        if (is_array($val['category_ids'])) $categoryId = end($val['category_ids']);
+                        else $categoryId = null;
+                        $_aOptionName[$i] .= " (" . $this->htmlEscape(Mage::getModel("catalog/category")->load($categoryId)->getName()) . ")" ;
+                    }
+                endforeach;
+            endif;
+            ?><span class="chosen"><?php echo implode(', ', $_aOptionName); ?></span>
+            <?php endforeach; ?>
+        <?php } else { ?>
+        <?php
+        // show "size" for simple product for drinks
+        if ($showDrink) {
+            ?>
+            <span class="fill"><?php echo $this->__('Type') ?></span>:
+            <span class="chosen"><?php echo $this->htmlEscape($itemProduct->getName()) .
+                " (" . $this->htmlEscape(Mage::getModel("catalog/category")->load($categoryIdEnd)->getName()) . ")" ?></span>
+            <?php
+            $showDrink = false;
+        }
+        ?>
+        <?php } ?>
+        <p>
+            <?php if ($messages = $this->getMessages()): ?>
+            <?php foreach ($messages as $message): ?>
+                <span class="fill">*</span>&nbsp; <span class="chosen"><?php echo $message['text'] ?></span>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </p>
+        <p>
+            <?php if ($addtInfoBlock = $this->getProductAdditionalInformationBlock()):?>
+            <?php echo $addtInfoBlock->setItem($_item)->toHtml() ?>
+            <?php endif;?>
+        </p>
+    </div>
+    <div class="lr">
+        <div class="amount"><?php echo Mage::helper("productview")->__('Amount') ?> <?php echo $_item->getQtyOrdered()*1; ?></div>
+        <div class="price"><?php echo $this->__('PRICE'); ?><?php echo $this->helper('checkout')->formatPrice($_item->getPrice()); ?></div>
+    </div>
+</div>

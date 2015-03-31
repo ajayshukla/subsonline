@@ -1,0 +1,77 @@
+<?php //echo $this->getChildHtml('items_before'); ?>
+
+<div class="content order">
+    <div class="title"><?php echo $this->__('Your order'); ?></div>
+
+    <?php
+    // product categories in the basket
+    try {
+        $cartCategories = array();
+        foreach($this->getItems() as $_item) {
+            $categoryIds = $_item->getProduct()->getCategoryIds();
+            if (!is_array($categoryIds)) $categoryIds = array();
+            if ($_item->getProduct()->getTypeId() == 'simple') {
+                $productSimpleSKU = explode("-", $_item->getProduct()->getSku());
+                if ($productSimpleSKU[0] == "drinks") {
+                    $categoryId = Mage::getModel("catalog/category")->load(end($categoryIds))->getParentId();
+                    $cartCategories[$categoryId]['items'][] = $_item->getId();
+                    $cartCategories[$categoryId]['qty'][] = $_item->getQty();
+                } else {
+					$categoryId = end($categoryIds);
+					$cartCategories[$categoryId]['items'][] = $_item->getId();
+					$cartCategories[$categoryId]['qty'][] = $_item->getQty();
+				}
+            } else {
+                $categoryId = end($categoryIds);
+                $cartCategories[$categoryId]['items'][] = $_item->getId();
+                $cartCategories[$categoryId]['qty'][] = $_item->getQty();
+            }
+
+        }
+    } catch (Exception $e) {
+        Mage::log($e->getMessage(), null, 'exception.log');
+    }
+
+    // serial number of a product in the basket shown on the basket page
+    global $prodNo;
+    $prodNo = 1;
+
+    foreach ($cartCategories as $catId => $categoryItems) {
+        $category =  Mage::getModel("catalog/category")->load($catId);
+        // category total quantity
+        $catTotal = 0;
+        foreach ($categoryItems['qty'] as $key => $qty) {
+            $catTotal += intval($qty);
+        }
+        ?>
+        <div class="position_title"><?php echo $category->getName(); ?> <span class="total"><?php echo $this->__("TOTAL ") . $catTotal ?></span></div>
+        <?php
+        foreach ($categoryItems['items'] as $key => $itemId) {
+            foreach($this->getItems() as $_item) {
+                if ($_item->getId() == $itemId) {
+                    echo $this->getItemHtml($_item);
+                    $prodNo++;
+                }
+            }
+        }
+    }
+    ?>
+
+    <div class="order_total">
+        <div class="total_price"><?php echo $this->getChildHtml('totals'); ?></div>
+    </div>
+
+    <div class="place_order">
+        <span id="review-buttons-container">
+            <?php echo $this->getChildHtml('button') ?><span class="please-wait" id="review-please-wait" style="display:none;"><img src="<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif') ?>" alt="<?php echo $this->__('Submitting order information...') ?>" title="<?php echo $this->__('Submitting order information...') ?>" class="v-middle" /> <?php echo $this->__('Submitting order information...') ?></span>
+        </span>
+        <span class="read_agree"><?php echo $this->getChildHtml('agreements') ?></span>
+		<span id="backInBilling"><a hre     f="#"><?php echo $this->__("Back") ?></a></span>
+        <script type="text/javascript">//!!!!!
+            //<![CDATA[
+            review = new ExcellenceReview('<?php echo $this->getUrl('checkout/onepage/saveOrder', array('form_key' => Mage::getSingleton('core/session')->getFormKey())) ?>', '<?php echo $this->getUrl('checkout/onepage/success') ?>', $('checkout-agreements'));
+            //]]>
+        </script>
+    </div>
+
+</div>

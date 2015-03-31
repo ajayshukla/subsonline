@@ -1,0 +1,209 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2011 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+	$this->_prepareLayout($this->getCustomer()->getDefaultBilling());
+?>
+<div id="main account">
+	<div class="title account"><?php echo Mage::helper("customer")->__('My Account') ?></div>
+	<div class="content account">
+		<div class="info">
+			<div class="title" id="infoMsg"><?php if($this->getMessagesBlock()->getGroupedHtml()): ?><?php echo $this->getMessagesBlock()->getGroupedHtml() ?><?php endif;?>&nbsp;</div>
+			<div class="lblock"><?php echo Mage::helper("productview")->__('Company name') ?></div><span class="rblock" id="info_company"><?php echo $this->htmlEscape($this->getAddress()->getCompany()) ?></span>
+			<div class="lblock"><?php echo Mage::helper("productview")->__('CVR') ?></div><span class="rblock" id="info_cvr"><?php echo $this->htmlEscape($this->getAddress()->getCvr()) ?></span>
+			<div class="lblock"><?php echo Mage::helper("productview")->__('Name') ?></div><span class="rblock" id="info_firstname"><?php echo $this->htmlEscape($this->getAddress()->getFirstname()) ?><br /></span>
+			<div class="lblock"><?php echo Mage::helper("productview")->__('Address') ?></div><span class="rblock" id="info_address"><?php echo $this->htmlEscape($this->getAddress()->getStreet(1)) ?></span>
+			<div class="lblock"><?php echo Mage::helper("productview")->__('Zip.nr.') ?></div><span class="zip" id="info_zip"><?php echo $this->htmlEscape($this->getAddress()->getPostcode()) ?></span>
+			<div class="city"><?php echo Mage::helper("productview")->__('City') ?></div><span class="city" id="info_city"><?php echo $this->htmlEscape($this->getAddress()->getCity()) ?></span>
+			<div class="lblock"><?php echo Mage::helper("productview")->__('Mobile phone') ?></div><span class="rblock" id="info_mphone"><?php echo $this->htmlEscape($this->getAddress()->getTelephone()) ?></span>
+			<div class="lblock"><?php echo Mage::helper("productview")->__('Email') ?></div><span class="rblock" id="info_email"><?php echo $this->htmlEscape($this->getCustomer()->getEmail()) ?></span>
+			<div class="lblock"><?php echo Mage::helper("productview")->__('Password') ?></div><span class="rblock">**********</span>
+			<div class="change">
+				<div class="userbox">
+					<a href="#" title="<?php echo $this->__('Change personal data') ?>"><?php echo $this->__('Change personal data') ?></a>
+				</div>
+			</div>
+		</div>
+		<div class="acc_buttons">
+			<button class="big_button left" onclick="document.location.href='<?php echo $this->getUrl('wishlist') ?>'"><span><?php echo Mage::helper("productview")->__('Favorite products') ?></span></button>
+			<button class="big_button" onclick="document.location.href='<?php echo $this->getUrl('favourites') ?>'"><span><?php echo Mage::helper("productview")->__('Favorite fillings') ?></span></button>
+			<button class="big_button right" onclick="document.location.href='<?php echo $this->getUrl('sales/order/history') ?>'"><span><?php echo Mage::helper("productview")->__('Last orders') ?></span></button>
+		</div>
+	</div>
+</div>
+
+
+<div id="dialog_overlay" style="display: none;"></div>
+
+<div id="change_details" style="display:none;">
+	<div class="popup change_details">
+		<h2><?php echo Mage::helper("productview")->__('Change details') ?></h2>
+		<form action="<?php echo $this->getUrl('ajax/customer_account/editPost') ?>" method="post" id="editFormPopup">
+
+		<div class="fieldset">
+		<ul class="form-list">
+			<li class="fields">
+			<div class="field">
+				<label for="company"><?php echo Mage::helper("productview")->__('Company name') ?></label>
+				<div class="input-box">
+					<input type="text" name="company" id="company" title="" class="rblock" value="<?php echo $this->htmlEscape($this->getAddress()->getCompany()) ?>" />
+				</div>
+			</div>
+			</li>
+
+			<li class="fields">
+			<div class="field">
+				<label for="cvr"><?php echo Mage::helper("productview")->__('CVR') ?></label>
+				<div class="input-box">
+					<input class="rblock" name="cvr" id="cvr" value="<?php echo $this->htmlEscape($this->getAddress()->getCvr()) ?>" />
+				</div>
+			</div>
+			</li>
+
+			<li class="fields">
+			<div class="field">
+				<label for="firstname"><?php echo Mage::helper("productview")->__('Name') ?></label>
+				<div class="input-box">
+					<input class="rblock required-entry" name="firstname" id="firstname" value="<?php echo $this->htmlEscape($this->getAddress()->getFirstname()) ?>" />
+				</div>
+				<em>*</em>
+			</div>
+			</li>
+
+			<li class="fields">
+			<div class="field">
+				<label for="address"><?php echo Mage::helper("productview")->__('Address') ?></label>
+				<div class="input-box">
+					<input class="rblock required-entry" name="street[]" id="address" value="<?php echo $this->htmlEscape($this->getAddress()->getStreet(1)) ?>" />
+				</div>
+				<em>*</em>
+			</div>
+			</li>
+
+			<li class="fields">
+			<div class="field">
+				<label for="zip"><?php echo Mage::helper("productview")->__('Zip.nr.') ?></label>
+				<div class="input-box">
+					<input class="zip required-entry validate-alphanum" name="postcode" id="zip" value="<?php echo $this->htmlEscape($this->getAddress()->getPostcode()) ?>" />
+				</div>
+				<em>*</em>
+			</div>
+			</li>
+
+			<li class="fields">
+			<div class="field">
+				<label for="city"><?php echo Mage::helper("productview")->__('City') ?></label>
+				<div class="input-box">
+					<input class="city required-entry" name="city" id="city" value="<?php echo $this->htmlEscape($this->getAddress()->getCity()) ?>" />
+				</div>
+				<em>*</em>
+			</div>
+			</li>
+
+			<li class="fields">
+			<div class="field">
+				<label for="phone"><?php echo Mage::helper("productview")->__('Phone') ?></label>
+				<div class="input-box">
+					<input class="rblock validate-digits" name="fax" id="phone" maxlength="10" value="<?php echo $this->htmlEscape($this->getAddress()->getFax()) ?>" />
+				</div>
+			</div>
+			</li>
+
+			<li class="fields">
+			<div class="field">
+				<label for="mphone"><?php echo Mage::helper("productview")->__('Mobile phone') ?></label>
+				<div class="input-box">
+					<input class="rblock required-entry validate-digits" name="telephone" id="mphone" maxlength="10" value="<?php echo $this->htmlEscape($this->getAddress()->getTelephone()) ?>" />
+				</div>
+				<em>*</em>
+			</div>
+			</li>
+
+			<li class="fields">
+			<div class="field">
+				<label for="email_"><?php echo Mage::helper("productview")->__('Email') ?></label>
+				<div class="input-box">
+					<input class="rblock email validate-email required-entry" name="email" id="email_" value="<?php echo $this->htmlEscape($this->getCustomer()->getEmail()) ?>" />
+				</div>
+				<em>*</em>
+			</div>
+			</li>
+
+			<li class="fields">
+			<div class="field">
+				<label for="email_address_confirm"><?php echo Mage::helper("productview")->__('Repeat email') ?></label>
+				<div class="input-box">
+					<input class="rblock email validate-email-confirm required-entry" name="email_confirm" id="email_address_confirm" value="<?php echo $this->htmlEscape($this->getCustomer()->getEmail()) ?>" />
+				</div>
+				<em>*</em>
+			</div>
+			</li>
+
+			<li class="fields">
+			<div class="field">
+				<label for="current_password"><?php echo Mage::helper("productview")->__('Current Password') ?></label>
+				<div class="input-box">
+					<input class="rblock" type="password" name="current_password" id="current_password" />
+				</div>
+			</div>
+			</li>
+
+			<li class="fields">
+			<div class="field">
+				<label for="password"><?php echo Mage::helper("productview")->__('New Password') ?></label>
+				<div class="input-box">
+					<input class="rblock validate-password" type="password"  name="password" id="password" />
+				</div>
+			</div>
+			</li>
+
+			<li class="fields">
+			<div class="field">
+				<label for="confirmation"><?php echo Mage::helper("productview")->__('Repeat password') ?></label>
+				<div class="input-box">
+					<input class="rblock validate-cpassword" type="password" name="confirmation" id="confirmation" />
+				</div>
+			</div>
+			</li>
+		</ul>
+		</div>
+		<div class="bottom">
+			<div id="msgPopup" class="" style="display:none;"></div>
+			<div class="paddb">
+				<span id="editFormPopup-ajax" class="ajax-loader" style="display:none;float:left;margin:17px 0 0 -35px;"></span>
+				<button type="submit" style="float:left;" class="submit" title="<?php echo Mage::helper("productview")->__('Save') ?>" name="send" id="btnEditFormPopup"><span><span><?php echo Mage::helper("productview")->__('Save') ?></span></span></button>
+				<button type="button" style="float:right;margin-right:27px;" class="cancel" title="<?php echo Mage::helper("productview")->__('Cancel') ?>" name="cancel" id="cancelBtnEditFormPopup"><span><span><?php echo Mage::helper("productview")->__('Cancel') ?></span></span></button>
+			</div>
+		</div>
+		</form>
+	</div>
+	<script type="text/javascript">
+    //<![CDATA[
+		var editFormPopup = new EditFormPopupAjax('editFormPopup', true);
+		<?php if($this->getShowAddressFields()): ?>
+        new RegionUpdater('country', 'region', 'region_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'zip');
+        <?php endif; ?>
+    //]]>
+	</script>
+</div>

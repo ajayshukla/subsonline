@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Submarine Catalog module
+ *
+ * @category    Submarine
+ * @package     Submarine_Catalog
+ */
+-->
+<config>
+    <modules>
+        <Submarine_Catalog>
+            <active>true</active>
+            <codePool>local</codePool>
+            <depends>
+                <Mage_Catalog/>
+            </depends>
+        </Submarine_Catalog>
+    </modules>
+</config>

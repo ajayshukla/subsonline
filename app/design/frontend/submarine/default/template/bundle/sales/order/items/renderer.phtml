@@ -1,0 +1,67 @@
+<?php $parentItem = $this->getItem() ?>
+<?php $items = array_merge(array($parentItem), $parentItem->getChildrenItems()); ?>
+<?php $_count = count ($items) ?>
+<?php global $prodNo; ?>
+<?php
+	$showTypeMenus = $showTypeExtras =false;
+	$product = Mage::getModel('catalog/product')->load($parentItem->getProductId());
+	$productBundleSKU = $product->getSku();
+	$aProductBundleSKU = explode("-", $product->getSku());
+	if (in_array($productBundleSKU, array('valgfrisupermenu', 'supermenu', 'saladmenu', 'menu', 'kidsmenu'))) $showTypeMenus = true;
+	elseif ($aProductBundleSKU[0] == 'extras') $showTypeExtras = true;
+?>
+
+<div class="order_view">
+<div class="ll"><?php echo $prodNo ?></div>
+<div class="lc">
+    <?php $options = array();
+        foreach ($items as $_item){
+            if ($_item->getParentItem()) {
+                $attributes      = $this->getSelectionAttributes($_item);
+                $itemName        = $this->htmlEscape($_item->getName());
+                $explodedItemSKU = explode('-', $_item->getSku());
+                if ($explodedItemSKU[0] == 'drinks') {
+                    /** @var Mage_Catalog_Model_Product */
+                    $itemProduct   = Mage::getModel('catalog/product')->load($_item->getProductId());
+                    $categoryIds   = $itemProduct->getCategoryIds();
+                    $endCategoryId = end($categoryIds);
+                    // append category name for drinks
+                    if ($endCategoryId) {
+                        $itemName.= ' ('. $this->htmlEscape(Mage::getModel('catalog/category')->load($endCategoryId)->getName()) . ')';
+                    }
+                }
+                $options[$attributes['option_label']][] = $itemName;
+            }
+        }
+    ?>
+    <div class="option-value">
+    <?php foreach($options as $key => $val){ ?>
+
+		<?php
+		// show "type" for menus
+		if ($showTypeMenus) {
+			?>
+			<span class="fill"><?php echo $this->__('Type of Menus') ?></span>:&nbsp;
+			<span class="chosen"><?php echo $this->htmlEscape($product->getName()) ?></span>
+			<?php
+			$showTypeMenus = false;
+		}
+		if ($showTypeExtras) {
+			?>
+			<span class="fill"><?php echo Mage::helper("productview")->__('Type of Extras') ?></span>:&nbsp;
+			<span class="chosen"><?php echo $this->htmlEscape($product->getName()) ?></span>
+			<?php
+			$showTypeExtras = false;
+		}
+		?>
+
+		<span class="fill"><?php echo $key; ?></span>:
+        <span class="chosen"><?php echo implode(', ', $val); ?></span>&nbsp;
+    <?php } ?>
+    </div>
+</div>
+<div class="lr">
+    <div class="amount"><?php echo Mage::helper("productview")->__('Amount') ?> <?php echo $this->getItem()->getQtyOrdered()*1; ?></div>
+    <div class="price"><?php echo $this->__('PRICE'); ?><?php echo $this->helper('checkout')->formatPrice($this->getItem()->getPrice()); ?></div>
+</div>
+</div>

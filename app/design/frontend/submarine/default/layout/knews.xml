@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+        <reference name="root">
+            <action method="unsetChild"><alias>breadcrumbs</alias></action>
+        </reference>
+        <reference name="content_right_block">
+            <block type="knews/block" name="knews.block" template="kontilint/news/block.phtml" />
+            <block type="cms/block" name="block_content_right_picture" after="knews.block">
+                <action method="setBlockId"><block_id>block_content_right_picture</block_id></action>
+            </block>
+        </reference>
+    </default>
+    <knews_index_index>
+        <reference name="root">
+            <action method="setTemplate"><template>page/3columns.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="knews/items" name="knews.news" template="kontilint/news/news.phtml">
+                <action method="setDataByKey"><key>category_id</key><value>japp2</value></action>
+                <action method="setCategory"><value>1</value></action>
+                <block type="knews/pagination" name="knews.pagination" as="pagination" template="kontilint/news/pagination.phtml"/>
+            </block>
+        </reference>
+    </knews_index_index>
+    <knews_index_view>
+        <reference name="root">
+            <action method="setTemplate"><template>page/3columns.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="knews/item" name="knews.detail" template="kontilint/news/news-detail.phtml" />
+        </reference>
+    </knews_index_view>
+</layout>
+
